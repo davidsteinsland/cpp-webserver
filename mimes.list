@@ -1,0 +1,282 @@
+.aac	audio/aac	AAC audio file	
+.abw	application/abiword	AbiWord document	
+.acx	application/internet-property-stream	Atari ST Executable	
+.ai	application/illustrator	Adobe Illustrator file	
+.aif	audio/aiff	AIFF audio file	audio/aifc, audio/x-aiff
+.aifc	audio/aiff	AIFF audio file	audio/aifc, audio/x-aiff
+.aiff	audio/aiff	AIFF audio file	audio/aifc, audio/x-aiff
+.asf	video/x-ms-asf	Windows Media file	
+.asp	application/x-asp	ASP source file	text/asp
+.asr	video/x-ms-asf	Windows Media file	
+.asx	video/x-ms-asf	Windows Media file	
+.au	audio/basic	Audio file	audio/au, audio/x-au, audio/x-basic
+.avi	video/avi	AVI video file	application/x-troff-msvideo, image/avi, video/msvideo, video/x-msvideo, video/xmpg2
+.axs	application/olescript	ActiveX Script 	
+.bas	text/plain	BASIC Source Code 	
+.bin	application/octet-stream	Binary File	application/bin, application/binary, application/x-msdownload
+.bmp	image/bmp	Bitmap image	application/bmp, application/x-bmp, image/ms-bmp, image/x-bitmap, image/x-bmp, image/x-ms-bmp, image/x-win-bitmap, image/x-windows-bmp, image/x-xbitmap
+.bz2	application/x-bzip2	Compressed bzip2 file	application/bzip2, application/x-bz2, application/x-bzip
+.c	text/x-csrc	C source file	
+.c++	text/x-c++src	C++ source file	
+.cab	application/vnd.ms-cab-compressed	Microsoft Cabinet archive	application/cab, application/x-cabinet
+.cat	application/vnd.ms-pkiseccat	Security Catalog 	
+.cct	application/x-director	Adobe Director file	
+.cdf	application/cdf	Channel Definition Format	application/x-cdf, application/netcdf, application/x-netcdf, text/cdf, text/x-cdf
+.cer	application/x-x509-ca-cert	Internet Security Certificate file	application/pkix-cert, application/x-pkcs12, application/keychain_access
+.cfc	application/x-cfm	ColdFusion source file	
+.cfm	application/x-cfm	ColdFusion source file	
+.class	application/x-java	Java bytecode file	application/java, application/java-byte-code, application/java-vm, application/x-java-applet, application/x-java-bean, application/x-java-class, application/x-java-vm, application/x-jinit-bean, application/x-jinit-applet
+.clp	application/x-msclip	Windows Clipboard/Picture	
+.cmx	image/x-cmx	Presentation Exchange Image 	application/cmx, application/x-cmx, drawing/cmx, image/x-cmx
+.cod	image/cis-cod	CIS-COD file	
+.cp	text/x-c++src	C++ source file	
+.cpio	application/x-cpio	UNIX CPIO Archive	
+.cpp	text/x-c++src	C++ source file	
+.crd	application/x-mscardfile	Windows Cardfile 	
+.crt	application/x-x509-ca-cert	Internet Security Certificate file	application/pkix-cert, application/x-pkcs12, application/keychain_access
+.crl	application/pkix-crl	Certificate Revocation List 	
+.crt	application/x-x509-ca-cert	Certificate File 	application/pkix-cert, application/keychain_access
+.csh	application/x-csh	C Shell file	
+.css	text/css	Cascading stylesheet file	application/css-stylesheet
+.cst	application/x-director	Adobe Director file	
+.csv	text/csv	Comma-delimited file	application/csv, text/comma-separated-values, text/x-comma-separated-values
+.cxt	application/x-director	Adobe Director file	
+.dcr	application/x-director	Adobe Director file	
+.der	application/x-x509-ca-cert	Internet Security Certificate file	application/pkix-cert, application/x-pkcs12, application/keychain_access
+.dib	image/bmp	Bitmap image	application/bmp, application/x-bmp, image/ms-bmp, image/x-bitmap, image/x-bmp, image/x-ms-bmp, image/x-win-bitmap, image/x-windows-bmp, image/x-xbitmap
+.diff	text/x-patch	Patch source file	
+.dir	application/x-director	Adobe Director file	
+.dll	application/x-msdownload	Dynamic Link Library 	application/octet-stream, application/x-msdos-program
+.dms	application/octet-stream	DISKMASHER Compressed Archive	
+.doc	application/vnd.ms-word	Microsoft Word document	application/doc, application/msword, application/msword-doc, application/vnd.msword, application/winword, application/word, application/x-msw6, application/x-msword, application/x-msword-doc
+.docm	application/vnd.ms-word.document.macroEnabled.12	Microsoft Word document	
+.docx	application/vnd.openxmlformats-officedocument.wordprocessingml.document	Microsoft Word file	application/vnd.ms-word.document.12, application/vnd.openxmlformats-officedocument.word
+.dot	application/msword	Word Document Template 	
+.dotm	application/vnd.ms-word.template.macroEnabled.12	Microsoft Word template file	
+.dotx	application/vnd.openxmlformats-officedocument.wordprocessingml.template	Microsoft Word template file	
+.dta	application/x-stata	Stata Data file	
+.dv	video/x-dv	Digital video file	
+.dvi	application/x-dvi	DVI file	
+.dwg	image/x-dwg	AutoCAD drawing	application/acad, application/autocad_dwg, application/dwg, application/x-acad, application/x-autocad, application/x-dwg, image/vnd.dwg
+.dxf	application/x-autocad	AutoCAD drawing	application/dxf, application/x-dxf, drawing/x-dxf, image/vnd.dxf, image/x-autocad, image/x-dxf
+.dxr	application/x-director	Adobe Director file	
+.elc	application/x-elc	Emacs source file	
+.eml	message/rfc822	Web Archive file	
+.enl	application/x-endnote-library	EndNote Library file	application/x-endnote-refer
+.enz	application/x-endnote-library	EndNote Library file	application/x-endnote-refer
+.eps	application/postscript	PostScript file	application/eps, application/x-eps, image/eps, image/x-eps
+.etx	text/x-setext	Setext (Structure Enhanced Text)	text/anytext
+.evy	application/envoy	Envoy Document 	application/x-envoy
+.exe	application/x-msdos-program	Windows executable file	application/dos-exe, application/exe, application/msdos-windows, application/x-sdlc, application/x-exe, application/x-winexe
+.fif	application/fractals	Fractal Image Format	image/fif
+.flr	x-world/x-vrml	Virtual Reality Modeling Language file	
+.fm	application/vnd.framemaker	FrameMaker file	application/framemaker, application/maker, application/vnd.mif, application/x-framemaker, application/x-maker, application/x-mif
+.fqd	application/x-director	Adobe Director file	
+.gif	image/gif	GIF image	
+.gtar	application/tar	Compressed tar file	application/x-gtar, application/x-tar
+.gz	application/gzip	Compressed gzip archive	application/gzip-compressed, application/gzipped, application/x-gunzip, application/x-gzip
+.h	text/x-chdr	C header file	
+.hdf	application/x-hdf	Hierarchical Data Format file	
+.hlp	application/winhlp	Windows Help File	application/x-helpfile, application/x-winhelp
+.hqx	application/binhex	BinHex archive	application/mac-binhex, application/mac-binhex40
+.hta	application/hta	HTML application file	
+.htc	text/x-component	HTML Component file	
+.htm	text/html	HTML file	application/xhtml+xml
+.html	text/html	HTML file	application/xhtml+xml
+.htt	text/webviewhtml	Hypertext Template File	
+.ico	image/x-ico	Favicon, Icon file	
+.ics	text/calendar	Calendar file	
+.ief	image/ief	IEF Image File	
+.iii	application/x-iphone	Intel IPhone Compatible File	
+.indd	application/x-indesign	Adobe InDesign file	
+.ins	application/x-internet-signup	IIS Internet Communications Settings file	
+.isp	application/x-internet-signup	IIS Internet Service Provider Settings file	
+.jad	text/vnd.sun.j2me.app-descriptor	Java Application Descriptor	
+.jar	application/java-archive	Java Archive file	
+.java	text/x-java	Java source file	java/*, text/java, text/x-java-source
+.jfif	image/jpeg	JPEG image	image/pjpeg
+.jpe	image/jpeg	JPEG image	image/pjpeg
+.jpeg	image/jpeg	JPEG image	image/pjpeg
+.jpg	image/jpeg	JPEG image	image/pjpeg
+.js	text/javascript	JavaScript source file	application/javascript, application/x-javascript, application/x-js
+.kml	application/vnd.google-earth.kml+xml	KML file	
+.kmz	application/vnd.google-earth.kmz	Compressed KML file	
+.latex	application/x-latex	LATEX file	text/x-latex
+.lha	application/x-lha	Compressed archive file	application/lha, application/lzh, application/x-lzh, application/x-lzh-archive
+.lib	application/x-endnote-library	EndNote Library file	application/x-endnote-refer
+.llb	application/x-labview	LabVIEW application file	application/x-labview-vi
+.log	text/x-log	Log text file	
+.lsf	video/x-la-asf	Streaming Audio/Video File	
+.lsx	video/x-la-asf	Streaming Audio/Video File	
+.lvx	application/x-labview-exec	LabVIEW CAL Simulation file	
+.lzh	application/x-lha	Compressed archive file	application/lha, application/lzh, application/x-lzh, application/x-lzh-archive
+.m	text/x-objcsrc	Objective C source file	
+.m1v	video/mpeg	MPEG video file	
+.m2v	video/mpeg	MPEG video file	
+.m3u	audio/x-mpegurl	MP3 playlist file	application/x-winamp-playlist, audio/mpegurl, audio/mpeg-url, audio/playlist, audio/scpls, audio/x-scpls
+.m4a	audio/m4a	MPEG-4 audio file	audio/x-m4a
+.m4v	video/mp4	MPEG-4 video file	video/mpeg4, video/x-m4v
+.ma	application/mathematica	Mathematica file	
+.mail	message/rfc822	Web Archive file	
+.man	application/x-troff-man	Troff with MAN macros file	
+.mcd	application/x-mathcad	MathCaD file	application/mcad
+.mdb	application/vnd.ms-access	Microsoft Access file	application/mdb, application/msaccess, application/vnd.msaccess, application/x-mdb, application/x-msaccess
+.me	application/x-troff-me	Troff with ME macros file	
+.mfp	application/x-shockwave-flash	Adobe Flash file	application/futuresplash
+.mht	message/rfc822	Web Archive file	
+.mhtml	message/rfc822	Web Archive file	
+.mid	audio/x-midi	MIDI audio file	application/x-midi, audio/mid, audio/midi, audio/soundtrack
+.midi	audio/x-midi	MIDI audio file	application/x-midi, audio/mid, audio/midi, audio/soundtrack
+.mif	application/vnd.framemaker	FrameMaker file	application/framemaker, application/maker, application/vnd.mif, application/x-framemaker, application/x-maker, application/x-mif
+.mny	application/x-msmoney	Money Data File	
+.mov	video/quicktime	Quicktime video file	
+.mp2	video/mpeg	MPEG layer 2 audio file	audio/mpeg, audio/x-mpeg, audio/x-mpeg-2, video/x-mpeg, video/x-mpeq2a
+.mp3	audio/mpeg	MP3 audio file	audio/mp3, audio/mpeg3, audio/mpg, audio/x-mp3, audio/x-mpeg, audio/x-mpeg3, audio/x-mpg
+.mpa	video/mpeg	MPEG Audio Stream	
+.mpe	video/mpeg	MPEG video file	
+.mpeg	video/mpeg	MPEG video file	
+.mpg	video/mpeg	MPEG video file	
+.mpp	application/vnd.ms-project	Microsoft Project file	application/mpp, application/msproj, application/msproject, application/x-dos_ms_project, application/x-ms-project, application/x-msproject
+.mpv2	video/mpeg	MPEG Audio Stream	
+.mqv	video/quicktime	Quicktime video file	
+.ms	application/x-troff-ms	Troff with MS macros file	
+.mvb	application/x-msmediaview	Multimedia Viewer	
+.mws	application/x-maple	Maple Worksheet file	application/maple-v-r4
+.nb	application/mathematica	Mathematica file	
+.nws	message/rfc822	Web Archive file	
+.oda	application/oda	ODA Document	
+.odf	application/vnd.oasis.opendocument.formula	OpenOffice formula file	
+.odg	application/vnd.oasis.opendocument.graphics	OpenOffice graphics file	
+.odp	application/vnd.oasis.opendocument.presentation	OpenOffice presentation file	
+.ods	application/vnd.oasis.opendocument.spreadsheet	OpenOffice spreadsheet file	
+.odt	application/vnd.oasis.opendocument.text	OpenOffice document	
+.ogg	application/ogg	OGG audio file	application/x-ogg, audio/x-ogg
+.one	application/msonenote	Microsoft OneNote file	
+.p12	application/x-x509-ca-cert	Internet Security Certificate file	application/pkix-cert, application/x-pkcs12, application/keychain_access
+.patch	text/x-patch	Patch source file	
+.pbm	image/x-portable-bitmap	Portable bitmap image	image/pbm, image/portable-bitmap, image/x-pbm
+.pcd	image/x-photo-cd	Kodak Photo CD file	image/pcd
+.pct	image/x-pict	Macintosh Quickdraw image	image/pict, image/x-macpict
+.pdf	application/pdf	Adobe Acrobat file	application/acrobat, application/nappdf, application/x-pdf, application/vnd.pdf, text/pdf, text/x-pdf
+.pfx	application/x-pkcs12	Personal Information Exchange File	
+.pgm	image/x-portable-graymap	Portable graymap image	image/x-pgm
+.php	application/x-php	PHP source file	application/php, text/php, text/x-php
+.pic	image/x-pict	Macintosh Quickdraw image	image/pict, image/x-macpict
+.pict	image/x-pict	Macintosh Quickdraw image	image/pict, image/x-macpict
+.pjpeg	image/jpeg	JPEG image	image/pjpeg
+.pl	application/x-perl	Perl source file	text/x-perl
+.pls	audio/x-mpegurl	MP3 playlist file	application/x-winamp-playlist, audio/mpegurl, audio/mpeg-url, audio/playlist, audio/scpls, audio/x-scpls
+.pko	application/ynd.ms-pkipko	PublicKey Security Object 	
+.pm	application/x-perl	Perl source file	text/x-perl
+.pmc	application/x-perfmon	Windows Performance Monitor File 	
+.png	image/png	PNG image	image/x-png
+.pnm	image/x-portable-anymap	Portable Any Map Graphic Bitmap 	
+.pod	text/x-pod	Perl documentation file	
+.potm	application/vnd.ms-powerpoint.template.macroEnabled.12	Microsoft PowerPoint template file	
+.potx	application/vnd.openxmlformats-officedocument.presentationml.template	Microsoft PowerPoint template file	
+.ppam	application/vnd.ms-powerpoint.addin.macroEnabled.12	Microsoft PowerPoint file	
+.ppm	image/x-portable-pixmap	Portable pixmap image	application/ppm, application/x-ppm, image/x-ppm
+.pps	application/vnd.ms-powerpoint	Microsoft PowerPoint file	application/ms-powerpoint, application/mspowerpoint, application/powerpoint, application/ppt, application/vnd-mspowerpoint, application/vnd_ms-powerpoint, application/x-mspowerpoint, application/x-powerpoint
+.ppsm	application/vnd.ms-powerpoint.slideshow.macroEnabled.12	Microsoft PowerPoint file	
+.ppsx	application/vnd.openxmlformats-officedocument.presentationml.slideshow	Microsoft PowerPoint file	
+.ppt	application/vnd.ms-powerpoint	Microsoft PowerPoint file	application/ms-powerpoint, application/mspowerpoint, application/powerpoint, application/ppt, application/vnd-mspowerpoint, application/vnd_ms-powerpoint, application/x-mspowerpoint, application/x-powerpoint
+.pptm	application/vnd.ms-powerpoint.presentation.macroEnabled.12	Microsoft PowerPoint file	
+.pptx	application/vnd.openxmlformats-officedocument.presentationml.presentation	Microsoft PowerPoint file	
+.prf	application/pics-rules	PICS Rules file	
+.ps	application/postscript	PostScript file	application/eps, application/x-eps, image/eps, image/x-eps
+.psd	application/photoshop	Adobe Photoshop file	application/psd, application/x-photoshop, image/photoshop, image/psd, image/x-photoshop, image/x-psd
+.pub	application/vnd.ms-publisher	Microsoft Publisher file	application/x-mspublisher
+.py	text/x-python	Python source file	
+.qt	video/quicktime	Quicktime video file	
+.ra	audio/vnd.rn-realaudio	RealAudio file	audio/vnd.pn-realaudio, audio/x-pn-realaudio, audio/x-pn-realaudio-plugin, audio/x-pn-realvideo, audio/x-realaudio
+.ram	audio/vnd.rn-realaudio	RealAudio file	audio/vnd.pn-realaudio, audio/x-pn-realaudio, audio/x-pn-realaudio-plugin, audio/x-pn-realvideo, audio/x-realaudio
+.rar	application/rar	Compressed archive	application/x-rar-compressed
+.ras	image/x-cmu-raster	Raster image	
+.rgb	image/x-rgb	IRIS image	image/rgb
+.rm	application/vnd.rn-realmedia	RealMedia file	
+.rmi	audio/mid	Radio MIDI File 	
+.roff	application/x-troff	Troff file	
+.rpm	audio/vnd.rn-realaudio	RealAudio file	audio/vnd.pn-realaudio, audio/x-pn-realaudio, audio/x-pn-realaudio-plugin, audio/x-pn-realvideo, audio/x-realaudio
+.rtf	application/rtf	Rich Text Format file	application/richtext, application/x-rtf, text/richtext, text/rtf
+.rtx	application/rtf	Rich Text Format file	application/richtext, application/x-rtf, text/richtext, text/rtf
+.rv	video/vnd.rn-realvideo	RealVideo file	video/x-pn-realvideo
+.sas	application/sas	SAS file	application/x-sas, application/x-sas-data, application/x-sas-log, application/x-sas-output
+.sav	application/spss	SPSS file	
+.scd	application/x-msschedule	Schedule Data	
+.scm	text/x-script.scheme	Scheme file	text/x-scheme
+.sct	text/scriptlet	Windows Script Component	
+.sd2	application/spss	SPSS file	
+.sea	application/x-sea	Self-extracting archive	
+.sh	application/x-sh	Shell script file	application/x-shellscript
+.shar	application/x-shar	UNIX shar Archive File	
+.shtml	text/html	HTML file	application/xhtml+xml
+.sit	application/stuffit	Stuffit archive	application/x-sit, application/x-stuffit
+.smil	application/smil	SMIL file	application/smil+xml
+.snd	audio/basic	Audio file	audio/au, audio/x-au, audio/x-basic
+.spl	application/x-shockwave-flash	Adobe Flash file	application/futuresplash
+.spo	application/spss	SPSS file	
+.sql	text/x-sql	SQL file	text/sql
+.src	application/x-wais-source	WAIS source file	
+.sst	application/vnd.ms-pkicertstore	Certificate Store Crypto Shell Extension	
+.stl	application/vnd.ms-pkistl	Certificate Trust List	
+.stm	text/html	SHTML File 	
+.swa	application/x-director	Adobe Director file	
+.swf	application/x-shockwave-flash	Adobe Flash file	application/futuresplash
+.sxw	application/vnd.sun.xml.writer	OpenOffice.org document	
+.t	application/x-troff	Troff file	
+.tar	application/tar	Compressed tar file	application/x-gtar, application/x-tar
+.tcl	application/x-tcl	TCL source file	text/x-script.tcl, text/x-tcl
+.tex	application/x-tex	TeX file	text/x-tex
+.tga	image/x-targa	Truevision Targa image	application/tga, application/x-targa, application/x-tga, image/targa, image/tga, image/x-tga
+.tgz	application/gzip	Compressed gzip archive	application/gzip-compressed, application/gzipped, application/x-gunzip, application/x-gzip
+.tif	image/tiff	Tagged image file	application/tif, application/tiff, application/x-tif, application/x-tiff, image/tif, image/x-tif, image/x-tiff
+.tiff	image/tiff	Tagged image file	application/tif, application/tiff, application/x-tif, application/x-tiff, image/tif, image/x-tif, image/x-tiff
+.tnef	application/ms-tnef	Microsoft Exchange TNEF file	
+.tr	application/x-troff	Troff file	
+.trm	application/x-msterminal	Terminal Settings	
+.tsv	text/tsv	Tab-delimited file	text/tab-separated-values, text/x-tab-separated-values
+.twb	application/twb	Tableau Workbook file	application/twbx, application/x-twb
+.twbx	application/twb	Tableau Workbook file	application/twbx, application/x-twb
+.txt	text/plain	Plain text file	
+.uls	text/iuls	Internet Location Service	
+.ustar	application/x-ustar	POSIX tar Compressed Archive	
+.vcf	text/x-vcard	vCard File	
+.vrml	x-world/x-vrml	Virtual Reality Modeling Language File	
+.vsd	application/vnd.visio	Microsoft Visio file	application/visio, application/visio.drawing, application/vsd, application/x-visio, application/x-vsd, image/x-vsd
+.w3d	application/x-director	Adobe Director file	
+.war	application/x-webarchive	KDE Web archive	
+.wav	audio/wav	Waveform audio file	audio/s-wav, audio/wave, audio/x-wav
+.wcm	application/vnd.ms-works	Works File Transmission	
+.wdb	application/vnd.ms-works	Microsoft Works file	application/x-msworks-wp
+.wks	application/vnd.ms-works	Microsoft Works file	application/x-msworks-wp
+.wma	audio/x-ms-wma	Windows Media file	
+.wmf	image/x-wmf	Windows Media file	application/wmf, application/x-msmetafile, application/x-wmf, image/wmf, image/x-win-metafile
+.wmv	video/x-ms-wmv	Windows Media file	
+.wmz	application/x-ms-wmz	Windows Media Compressed file	
+.wpd	application/wordperfect	WordPerfect document	application/wordperf, application/wpd
+.wps	application/vnd.ms-works	Microsoft Works file	application/x-msworks-wp
+.wri	application/x-mswrite	Write Document	
+.wrl	x-world/x-vrml	VRML 3D file	
+.wrz	x-world/x-vrml	VRML 3D file	
+.xbm	image/x-xbitmap	Bitmap image	
+.xhtml	text/html	HTML file	application/xhtml+xml
+.xla	application/vnd.ms-excel	Excel Add-in	
+.xlam	application/vnd.ms-excel.addin.macroEnabled.12	Microsoft Excel file	
+.xlc	application/vnd.ms-excel	Excel Chart 	
+.xll	application/vnd.ms-excel	Microsoft Excel file	application/excel, application/msexcel, application/msexcell, application/x-dos_ms_excel, application/x-excel, application/x-ms-excel, application/x-msexcel, application/x-xls, application/xls
+.xlm	application/vnd.ms-excel	Excel Macro File	
+.xls	application/vnd.ms-excel	Microsoft Excel file	application/excel, application/msexcel, application/msexcell, application/x-dos_ms_excel, application/x-excel, application/x-ms-excel, application/x-msexcel, application/x-xls, application/xls
+.xlsb	application/vnd.ms-excel.sheet.binary.macroEnabled.12	Microsoft Excel file	
+.xlsm	application/vnd.ms-excel.sheet.macroEnabled.12	Microsoft Excel file	
+.xlsx	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet	Microsoft Excel file	
+.xlt	application/vnd.ms-excel	Excel Template File	
+.xltm	application/vnd.ms-excel.template.macroEnabled.12	Microsoft Excel file	
+.xltx	application/vnd.openxmlformats-officedocument.spreadsheetml.template	Microsoft Excel template file	
+.xlw	application/vnd.ms-excel	Excel Workspace File	
+.xml	text/xml	XML file	application/x-xml, application/xml
+.xpm	image/x-xpixmap	Pixmap image	image/x-xpm, image/xpm
+.xps	application/vnd.ms-xpsdocument	Microsoft XPS file	
+.xsl	text/xsl	XSLT stylesheet file	
+.xwd	image/x-xwindowdump	X Windows Dump	image/xwd, image/x-xwd, application/xwd, application/x-xwd
+.z	application/x-compress	UNIX Compressed Archive File	application/z, application/x-z
+.zip	application/zip	Compressed zip archive	application/x-compress, application/x-compressed, application/x-zip, application/x-zip-compressed, application/zip-compressed, application/x-7zip-compressed
