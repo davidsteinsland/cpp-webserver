@@ -16,6 +16,7 @@ namespace http
 			std::string protocol;
 			
 			std::map<std::string,std::string> headers;
+			std::map<std::string,std::string> query_string_map;
 			
 			std::string request_body;
 			std::string request_url;
@@ -40,6 +41,11 @@ namespace http
 			std::string query_string()
 			{
 				return request_query_string;
+			}
+			
+			std::string query_string(std::string k)
+			{
+				return query_string_map.find(k)->second;
 			}
 			
 			std::string header (std::string k)

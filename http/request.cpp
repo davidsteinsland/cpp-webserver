@@ -45,7 +45,22 @@ void http::request::parse (std::string str)
 			std::getline (lineStream, request_uri, ' ');
 			
 			if ( request_uri.find('?') != std::string::npos)
+			{
 				request_query_string = request_uri.substr (request_uri.find('?'));
+				
+				std::stringstream qss(request_query_string.substr(1));
+				
+				std::string param;
+				while ( std::getline(qss, param, '&') )
+				{
+					std::string key, val;
+					
+					key = param.substr(0, param.find('='));
+					val = param.substr (param.find('=') + 1);
+					
+					query_string_map.insert(std::pair<std::string,std::string>(key,val));
+				}
+			}
 			
 			readline (lineStream, protocol);
 		}
