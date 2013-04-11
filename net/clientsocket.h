@@ -5,9 +5,9 @@
 #define CLIENT_SOCKET_H 
  
 #include <winsock.h>
-#include "request.h"
+#include "../http/request.h"
 
-namespace http
+namespace net
 {
 	class clientsocket
 	{

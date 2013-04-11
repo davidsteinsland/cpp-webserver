@@ -3,12 +3,12 @@
 
 #include "../socket.h"
 
-int webserver::websocket::createSocket(int port)
+int net::socket::listen(int port)
 {
 	
 }
 
-void webserver::websocket::closeSocket()
+void net::socket::close()
 {
 
 }

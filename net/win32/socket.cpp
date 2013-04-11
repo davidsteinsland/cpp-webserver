@@ -6,13 +6,13 @@
 #include <stdio.h>
 #include <map>
 #include "../socket.h"
-#include "../request.h"
 #include "../clientsocket.h"
+#include "../../http/request.h"
 
 SOCKET serverSocket;
 WSAData wsaData;
 
-int http::socket::listen(int port)
+int net::socket::listen(int port)
 {
 	if (WSAStartup (0x0202, &wsaData) != NO_ERROR)
 	{
@@ -57,7 +57,7 @@ int http::socket::listen(int port)
 	return 1;
 }
 
-http::clientsocket* http::socket::get_connection ()
+net::clientsocket* net::socket::get_connection ()
 {
 	SOCKADDR_IN from;
 	int l = sizeof (from);
@@ -74,7 +74,7 @@ http::clientsocket* http::socket::get_connection ()
 	return clientSocket;
 }
 
-void http::socket::close ()
+void net::socket::close ()
 {
 	 //Close the socket if it exists
     if (serverSocket)

@@ -4,7 +4,7 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H 
 
-#include "../http/socket.h"
+#include "../net/socket.h"
 #include "../http/response.h"
 #include "../http/request.h"
  
@@ -13,7 +13,7 @@ namespace webserver
 	class webserver
 	{
 		private:
-			http::socket* listenSocket;
+			net::socket* listenSocket;
 			int port;
 		
 		public:

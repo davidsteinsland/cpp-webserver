@@ -23,6 +23,11 @@ http::request::request (std::string requestBody)
 	this->parse (reqBody);
 }
 
+http::request::~request()
+{
+
+}
+
 /**
  * Request       = Request-Line              ; Section 5.1
 				*(( general-header        ; Section 4.5

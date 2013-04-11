@@ -2,9 +2,9 @@
 #define WEBSERVER_CPP 
 
 #include "webserver.h"
+#include "../net/socket.h"
 #include "../http/response.h"
 #include "../http/request.h"
-#include "../http/socket.h"
 #include "../utils/ioutils.h"
 
 #ifdef TARGET_OS_MAC
@@ -12,12 +12,12 @@
 #endif
 
 #ifdef __linux__
-	#include "../http/unix/socket.cpp"
+	#include "../net/unix/socket.cpp"
 #endif
 
 #ifdef _WIN32
-	#include "../http/win32/socket.cpp"
-	#include "../http/win32/clientsocket.cpp"
+	#include "../net/win32/socket.cpp"
+	#include "../net/win32/clientsocket.cpp"
 #endif
 
 #include <string>
@@ -26,7 +26,7 @@
 webserver::webserver::webserver(int p)
 {
 	port = p;
-	listenSocket = new http::socket();
+	listenSocket = new net::socket();
 	
 	std::cout << "WebServer initiated" << std::endl;
 }
@@ -49,7 +49,7 @@ int webserver::webserver::listen ()
 	
 	while (true)
 	{
-		http::clientsocket* client = listenSocket->get_connection();
+		net::clientsocket* client = listenSocket->get_connection();
 		
 		if ( client == NULL )
 			continue;
@@ -65,6 +65,8 @@ int webserver::webserver::listen ()
 		std::string html_dir = "./public_html";
 		std::string filename = html_dir + request->get_uri();
 		// std::string file = utils::ioutils::get_file_contents ("public_html/index.html");
+		
+		delete request;
 		
 		/**
 		 * Try to load the following files, in prioritized order:

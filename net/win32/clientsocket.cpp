@@ -3,12 +3,12 @@
 
 #include <winsock.h>
 #include "../clientsocket.h"
-#include "../request.h"
+#include "../../http/request.h"
 #include <iostream>
 
 #define DEFAULT_BUFFER_SIZE 512
 
-http::clientsocket::clientsocket (SOCKET s, SOCKADDR_IN client)
+net::clientsocket::clientsocket (SOCKET s, SOCKADDR_IN client)
 {
 	socket = s;
 	
@@ -33,22 +33,22 @@ http::clientsocket::clientsocket (SOCKET s, SOCKADDR_IN client)
 	body = std::string(requestBuffer, 0, bytesRecieved);
 }
 
-http::clientsocket::~clientsocket()
+net::clientsocket::~clientsocket()
 {
-	
+	delete client_address;
 }
 
-http::request* http::clientsocket::get_request()
+http::request* net::clientsocket::get_request()
 {
 	return new http::request(body);
 }
 
-int http::clientsocket::send(const char* buf, int len, int flags)
+int net::clientsocket::send(const char* buf, int len, int flags)
 {
 	return ::send (socket, buf, len, flags);
 }
 
-void http::clientsocket::close()
+void net::clientsocket::close()
 {
 	closesocket(socket);
 }

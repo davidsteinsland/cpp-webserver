@@ -6,7 +6,7 @@
 
 #include "clientsocket.h"
 
-namespace http
+namespace net
 {
 	class socket
 	{
