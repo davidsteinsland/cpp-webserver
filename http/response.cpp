@@ -89,7 +89,6 @@ std::string http::response::body()
 
 std::string http::response::status()
 {
-	return "";
 	return status_codes.find(status_code)->second;
 }
 
