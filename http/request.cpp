@@ -41,15 +41,19 @@ void http::request::parse (std::string str)
 		
 		if (line_num == 1)
 		{
+			/**
+			 * parsing the request line, e.g. "GET /index.html HTTP/1.1"
+			 */
 			std::getline (lineStream, type, ' ');
 			std::getline (lineStream, request_uri, ' ');
 			
-			if ( request_uri.find('?') != std::string::npos)
+			int pos = request_uri.find('?');
+			if ( pos != std::string::npos)
 			{
-				request_query_string = request_uri.substr (request_uri.find('?'));
+				request_query_string = request_uri.substr (pos);
+				request_uri = request_uri.substr(0, pos);
 				
 				std::stringstream qss(request_query_string.substr(1));
-				
 				std::string param;
 				while ( std::getline(qss, param, '&') )
 				{
@@ -66,6 +70,9 @@ void http::request::parse (std::string str)
 		}
 		else
 		{
+			/**
+			 * parsing request headers
+			 */
 			std::string key, value;
 			std::getline (lineStream, key, ':');
 			std::getline (lineStream, value);
@@ -75,10 +82,10 @@ void http::request::parse (std::string str)
 			
 			this->header(key, value);
 		}
-		
-		request_url = std::string("http://");
-		request_url.append (this->header("Host"));
 	}
+	
+	request_url = std::string("http://");
+	request_url.append (this->header("Host"));
 }
 
 void http::request::header(std::string k,std::string v)
