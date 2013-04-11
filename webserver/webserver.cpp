@@ -89,22 +89,26 @@ int webserver::webserver::listen ()
 			{ }
 		}
 		
+		std::string headers;		
+	
 		if ( ! file_found )
 		{
+			headers = "HTTP/1.1 404 Not Found";
 			contents = "";
 		}
+		else
+		{
+			headers = "HTTP/1.1 200 OK \r\n";
+			headers.append ("Content-Type: text/html \r\n");
+		}
 		
-		int file_size = (int)contents.length();
-		
-		std::string headers = "HTTP/1.1 200 OK \r\n";
-		headers.append ("Content-Type: text/html \r\n");
-		char* content_length = new char[100];
-		sprintf (content_length, "Content-Length: %ld \r\n\r\n", file_size);
-		headers.append(content_length);
-		delete [] content_length;
+		char* htmp = new char[100];
+		sprintf (htmp, "Content-Length: %ld \r\n\r\n", (int)contents.length());
+		headers.append(htmp);
+		delete [] htmp;
 		
 		client->send (headers.c_str(), (int)headers.length(), 0);
-		client->send (contents.c_str(), file_size, 0);
+		client->send (contents.c_str(), (int)contents.length(), 0);
 		
 		client->close();
 		delete client;
