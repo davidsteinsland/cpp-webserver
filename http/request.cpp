@@ -17,10 +17,10 @@ std::stringstream& readline (std::stringstream &ss, std::string &line)
 	return ss;
 }
 
-http::request::request (std::string requestBody)
+http::request::request (std::string body)
 {
-	reqBody = requestBody;
-	this->parse (reqBody);
+	request_body = body;
+	this->parse (body);
 }
 
 http::request::~request()
@@ -28,14 +28,6 @@ http::request::~request()
 
 }
 
-/**
- * Request       = Request-Line              ; Section 5.1
-				*(( general-header        ; Section 4.5
-				 | request-header         ; Section 5.3
-				 | entity-header ) CRLF)  ; Section 7.1
-				CRLF
-				[ message-body ]          ; Section 4.3
-*/
 void http::request::parse (std::string str)
 {
 	std::stringstream ss(str);
@@ -50,10 +42,10 @@ void http::request::parse (std::string str)
 		if (line_num == 1)
 		{
 			std::getline (lineStream, type, ' ');
-			std::getline (lineStream, uri, ' ');
+			std::getline (lineStream, request_uri, ' ');
 			
-			if ( uri.find('?') != std::string::npos)
-				queryString = uri.substr (uri.find('?'));
+			if ( request_uri.find('?') != std::string::npos)
+				request_query_string = request_uri.substr (request_uri.find('?'));
 			
 			readline (lineStream, protocol);
 		}
@@ -66,12 +58,17 @@ void http::request::parse (std::string str)
 			if ( value[0] == ' ')
 				value.erase (0, 1);
 			
-			headers.insert (std::pair<std::string,std::string>(key, value));
+			this->header(key, value);
 		}
 		
-		url = std::string("http://");
-		url.append (headers.find("Host")->second);
+		request_url = std::string("http://");
+		request_url.append (this->header("Host"));
 	}
+}
+
+void http::request::header(std::string k,std::string v)
+{
+	headers.insert (std::pair<std::string,std::string>(k, v));
 }
 
 #endif

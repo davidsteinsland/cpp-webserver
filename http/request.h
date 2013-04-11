@@ -17,39 +17,41 @@ namespace http
 			
 			std::map<std::string,std::string> headers;
 			
-			std::string reqBody;
-			std::string url;
-			std::string uri;
-			std::string queryString;
+			std::string request_body;
+			std::string request_url;
+			std::string request_uri;
+			std::string request_query_string;
 		
 			void parse (std::string);
 		public:
 			request (std::string);
 			~request();
 			
-			std::string get_url()
+			std::string url()
 			{
-				return url;
+				return request_url;
 			}
 			
-			std::string get_uri()
+			std::string uri()
 			{
-				return uri;
+				return request_uri;
 			}
 			
-			std::string get_query_string()
+			std::string query_string()
 			{
-				return queryString;
+				return request_query_string;
 			}
 			
-			std::string get_header (std::string k)
+			std::string header (std::string k)
 			{
 				return headers.find(k)->second;
 			}
 			
+			void header (std::string,std::string);
+			
 			std::string body()
 			{
-				return reqBody;
+				return request_body;
 			}
 	};
 };

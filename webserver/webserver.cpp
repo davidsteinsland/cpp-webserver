@@ -57,13 +57,13 @@ int webserver::webserver::listen ()
 		http::request* request = client->get_request();
 		
 		std::cout << "Got a connection!" << std::endl;
-		std::cout << "URL: " << request->get_url() << std::endl;
-		std::cout << "URI: " << request->get_uri() << std::endl;
-		std::cout << "QS: " << request->get_query_string() << std::endl;
-		std::cout << "Host: " << request->get_header("Host") << std::endl;
+		std::cout << "URL: " << request->url() << std::endl;
+		std::cout << "URI: " << request->uri() << std::endl;
+		std::cout << "QS: " << request->query_string() << std::endl;
+		std::cout << "Host: " << request->header("Host") << std::endl;
 		
 		std::string html_dir = "./public_html";
-		std::string filename = html_dir + request->get_uri();
+		std::string filename = html_dir + request->uri();
 		// std::string file = utils::ioutils::get_file_contents ("public_html/index.html");
 		
 		delete request;
