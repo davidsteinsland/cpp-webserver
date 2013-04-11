@@ -4,20 +4,31 @@
 	<title>Welcome to Sollandet HTTP Server</title>
 	<meta charset="utf-8" />
 	
-	<style>
-	body { font-family:Arial; font-size:0.8em; }
-	div#wrapper { width:960px; margin:0 auto; }
-	
-	h2 { background:transparent url(logo.png) no-repeat left center; padding-left:60px; }
-	</style>
+	<link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 <body>
 	<div id="wrapper">
-		<h1>Congratulations!</h1>
-		<h2>Welcome to Sollandet HTTP Server</h2>
+		<h1>Welcome to Sollandet HTTP Server</h1>
+		<h2>Congratulations!</h2>
 		
 		<p>
 			You have just installed the Sollandet HTTP Server, and this page indicates that it works properly!
+		</p>
+		
+		<h2>What's Next?</h2>
+		
+		<p>
+			You may change the server's configuration settings within <var>server.conf</var>. The default <var>public_html</var> directory is set to <var>./public_html</var>, i.e. relative to the server's installation path.
+		</p>
+		
+		<h2>Commands</h2>
+		
+		<p>
+			Shutdown/restart/start:
+		</p>
+		
+		<p>
+			<var>webserver start|reload|stop</var>
 		</p>
 	</div>
 </body>

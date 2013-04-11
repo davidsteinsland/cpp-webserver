@@ -1,0 +1,31 @@
+body { font-family:Arial; font-size:0.8em; }
+div#wrapper { width:960px; margin:0 auto; }
+
+h1 {
+	background:transparent url(logo.png) no-repeat left center;
+	padding-left:140px;
+	line-height:128px;
+	
+	border-bottom:2px dotted #666;
+}
+
+h2
+{
+	padding:5px 10px;
+	background-color:#ccc;
+}
+
+var
+{
+	background-color: #F7F7F7;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.196), 0px 0px 0px 2px #FFFFFF inset;
+	color: #333;
+	display: inline-block;
+	font-style:normal;
+	line-height: 1.4;
+	margin: 0px 0.1em;
+	padding: 0.1em 0.6em;
+	text-shadow: 0px 1px 0px #FFFFFF;
+}
