@@ -5,6 +5,10 @@
 #include <fstream>
 #include <cerrno>
 #include <string>
+#include <sstream>
+#include <map>
+
+std::map<std::string,std::string> utils::ioutils::mime_types;
 
 std::string utils::ioutils::get_file_contents (std::string filename)
 	throw (int)
@@ -23,6 +27,32 @@ std::string utils::ioutils::get_file_contents (std::string filename)
 	}
 	
 	throw(errno);
+}
+
+std::string utils::ioutils::get_mime_type (std::string key)
+{
+	if (mime_types.size() == 0)
+	{
+		std::ifstream in("./mimes.list", std::ios::in);
+	
+		if (in)
+		{
+			std::string line;
+			while ( std::getline (in, line) )
+			{
+				std::string ext, mime_type;
+				
+				std::stringstream ss(line);
+				std::getline(ss, ext, '\t');
+				std::getline(ss, mime_type, '\t');
+				
+				mime_types.insert (std::pair<std::string,std::string> (ext, mime_type));
+				
+			}
+		}
+	}
+	
+	return mime_types.find(key)->second;
 }
 
 #endif
