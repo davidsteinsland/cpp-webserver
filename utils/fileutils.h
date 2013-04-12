@@ -16,7 +16,9 @@ namespace utils
 			
 		public:
 			static std::string contents (std::string) throw (int);
-			static std::string content_type (std::string); 
+			static std::string content_type (std::string);
+			static bool is_file (std::string);
+			static bool is_directory (std::string);
 	};
 };
 
