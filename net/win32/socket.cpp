@@ -68,6 +68,7 @@ net::clientsocket* net::socket::get_connection ()
 	if (msgSocket == INVALID_SOCKET)
 	{
 		clientSocket->close();
+		delete clientSocket;
 		return NULL;
 	}
 	
