@@ -1,58 +1,18 @@
 #ifndef IOUTILS_CPP
-#define IOUTILS_CPP 
+#define IOUTILS_CPP
 
 #include "ioutils.h"
-#include <fstream>
-#include <cerrno>
 #include <string>
 #include <sstream>
-#include <map>
 
-std::map<std::string,std::string> utils::ioutils::mime_types;
-
-std::string utils::ioutils::get_file_contents (std::string filename)
-	throw (int)
+std::stringstream& utils::ioutils::getline (std::stringstream &ss, std::string &line)
 {
-	std::ifstream in(filename.c_str(), std::ios::in | std::ios::binary);
-	if (in)
-	{
-		std::string contents;
-		in.seekg(0, std::ios::end);
-		contents.resize(in.tellg());
-		in.seekg(0, std::ios::beg);
-		in.read(&contents[0], contents.size());
-		in.close();
-		
-		return contents;
-	}
+	std::getline(ss, line, '\n');
 	
-	throw(errno);
-}
-
-std::string utils::ioutils::get_mime_type (std::string key)
-{
-	if (mime_types.size() == 0)
-	{
-		std::ifstream in("./mimes.list", std::ios::in);
+	if (line[line.size() - 1] == '\r')
+		line.resize(line.size() - 1);
 	
-		if (in)
-		{
-			std::string line;
-			while ( std::getline (in, line) )
-			{
-				std::string ext, mime_type;
-				
-				std::stringstream ss(line);
-				std::getline(ss, ext, '\t');
-				std::getline(ss, mime_type, '\t');
-				
-				mime_types.insert (std::pair<std::string,std::string> (ext, mime_type));
-				
-			}
-		}
-	}
-	
-	return mime_types.find(key)->second;
+	return ss;
 }
 
 #endif
