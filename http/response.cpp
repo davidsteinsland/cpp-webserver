@@ -64,7 +64,7 @@ std::map<std::string,std::string> http::response::headers()
 	return response_headers;
 }
 
-std::string http::response::response_line()
+std::string http::response::status_line()
 {
 	std::stringstream ss;	
 	ss << server_protocol << ' ' << status_code << ' ' << this->status() << "\r\n";

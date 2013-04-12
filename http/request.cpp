@@ -2,20 +2,14 @@
 #define REQUEST_CPP
 
 #include "request.h"
+#include "../utils/ioutils.h"
+
 #include <string>
 #include <map>
 #include <iostream>
 #include <sstream>
 
-std::stringstream& readline (std::stringstream &ss, std::string &line)
-{
-	std::getline(ss, line, '\n');
-	
-	if (line[line.size() - 1] == '\r')
-		line.resize(line.size() - 1);
-	
-	return ss;
-}
+
 
 http::request::request (std::string body)
 {
@@ -28,13 +22,21 @@ http::request::~request()
 
 }
 
+std::string http::request::status_line()
+{
+	std::string statusline;
+	std::stringstream ss(request_body);
+	utils::ioutils::getline (ss, statusline);
+	return statusline;
+}
+
 void http::request::parse (std::string str)
 {
 	std::stringstream ss(str);
 	std::string line;
 	int line_num = 0;
 	
-	while (readline(ss, line) && line.size() > 0)
+	while (utils::ioutils::getline(ss, line) && line.size() > 0)
 	{
 		++line_num;
 		std::stringstream lineStream(line);
@@ -66,7 +68,7 @@ void http::request::parse (std::string str)
 				}
 			}
 			
-			readline (lineStream, protocol);
+			utils::ioutils::getline (lineStream, protocol);
 		}
 		else
 		{

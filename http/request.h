@@ -28,6 +28,8 @@ namespace http
 			request (std::string);
 			~request();
 			
+			std::string status_line();
+			
 			std::string url()
 			{
 				return request_url;

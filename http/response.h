@@ -27,11 +27,12 @@ namespace http
 			void set_body(std::string);
 			
 			std::map<std::string,std::string> headers();
-			std::string response_line();
+			
 			std::string protocol();
 			int code();
 			std::string body();
 			std::string status();
+			std::string status_line();
 	};
 };
 
