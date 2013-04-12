@@ -23,6 +23,8 @@ namespace http
 			response (int,std::string);
 			~response();
 			
+			void set_status(int);
+			void set_content_type(std::string);
 			void set_header (std::string,std::string);
 			void set_body(std::string);
 			

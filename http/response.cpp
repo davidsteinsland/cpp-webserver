@@ -33,16 +33,29 @@ http::response::response (int http_code, std::string type)
 	this->create_status_lines();
 	
 	server_protocol = "HTTP/1.1";
-	status_code = http_code;
-	content_type = type;
 	
-	if (type.length() > 0)
-		this->set_header ("Content-Type", type);
+	this->set_status (http_code);
+	this->set_content_type(type);
 }
 
 http::response::~response()
 {
 	
+}
+
+void http::response::set_status(int k)
+{
+	status_code = k;
+}
+
+void http::response::set_content_type (std::string type)
+{
+	content_type = type;
+	
+	if (type.length() > 0)
+		this->set_header ("Content-Type", type);
+	else
+		response_headers.erase (type);
 }
 
 void http::response::set_header (std::string k,std::string v)
