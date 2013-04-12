@@ -25,6 +25,7 @@ void http::response::create_status_lines()
 	status_codes[403] = "Forbidden";
 	status_codes[404] = "Not Found";
 	status_codes[500] = "Internal Server Error";
+	status_codes[501] = "Not Implemented";
 	status_codes[502] = "Bad Gateway";
 };
 
@@ -53,13 +54,16 @@ void http::response::set_content_type (std::string type)
 	content_type = type;
 	
 	if (type.length() > 0)
+	{
 		this->set_header ("Content-Type", type);
+	}
 	else
 		response_headers.erase (type);
 }
 
 void http::response::set_header (std::string k,std::string v)
 {
+	response_headers.erase (k);
 	response_headers.insert (std::pair<std::string,std::string>(k,v));
 }
 
