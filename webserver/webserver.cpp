@@ -5,7 +5,7 @@
 #include "../net/socket.h"
 #include "../http/response.h"
 #include "../http/request.h"
-#include "../utils/ioutils.h"
+#include "../utils/fileutils.h"
 
 #ifdef TARGET_OS_MAC
 	#error Mac is not supported yet
@@ -27,8 +27,6 @@ webserver::webserver::webserver(int p)
 {
 	port = p;
 	listenSocket = new net::socket();
-	
-	std::cout << "WebServer initiated" << std::endl;
 }
 
 webserver::webserver::~webserver()
@@ -41,11 +39,10 @@ int webserver::webserver::listen ()
 {
 	if (listenSocket->listen(port) != 1)
 	{
-		// std::cout << "Error creating socket" << std::endl;
 		return 0;
 	}
 	
-	// std::cout << "WebServer listening..." << std::endl;
+	std::string html_dir = "./public_html";
 	
 	while (true)
 	{
@@ -56,58 +53,96 @@ int webserver::webserver::listen ()
 		
 		http::request* request = client->get_request();
 		
-		std::cout << "Got a connection!" << std::endl;
-		std::cout << "URL: " << request->url() << std::endl;
-		std::cout << "URI: " << request->uri() << std::endl;
-		std::cout << "QS: " << request->query_string() << std::endl;
-		std::cout << "Host: " << request->header("Host") << std::endl;
-		
-		std::string html_dir = "./public_html";
-		std::string filename = html_dir + request->uri();
-		// std::string file = utils::ioutils::get_file_contents ("public_html/index.html");
-		
-		delete request;
-		
 		/**
 		 * Try to load the following files, in prioritized order:
 		 * 1. The requested file
 		 * 2. Directory index
+		 * 2.1 301 page if directory exist, but no index.html
 		 * 3. 404 page
+		 * 3.1 if requested file is a directory, it is possibly dynamic content
 		 */
-		std::string filenames[3] = {filename, filename + "index.html", html_dir + "/404.html"};
-		std::string contents;
-		bool file_found = false;
-		for (int i = 0; i < 3; i++)
+		
+		http::response* response = new http::response (200, "text/plain");
+		std::string filename = html_dir + request->uri();
+		
+		bool dynamic_request = false;
+		
+		if ( !utils::fileutils::is_file (filename) )
 		{
-			try
+			if ( utils::fileutils::is_directory (filename))
 			{
-				filename = filenames[i];
-				contents = utils::ioutils::get_file_contents(filename);
-				file_found = true;
-				break;
+				if ( utils::fileutils::is_file (filename + "index.html") )
+				{
+					filename = filename + "index.html";
+				}
+				else
+				{
+					filename = html_dir + "/301.html";
+					response->set_status(301);
+				}
 			}
-			catch (...)
-			{ }
+			else
+			{
+				filename = html_dir + "/404.html";
+				response->set_status(404);
+			}
 		}
-		
-		std::string content_type = utils::ioutils::get_mime_type (filename.substr(filename.find_last_of(".")));	
-		int status_code = 200;
-		
-		if ( ! file_found || filename == filenames[2])
-			status_code = 404;
-		if ( ! file_found )
+		else
 		{
-			content_type = "";
+			// check if regular file, or executable (with no extension):
+			if ( request->uri().find('.') == std::string::npos)
+				dynamic_request = true;
 		}
 		
+		try
+		{
+			if (dynamic_request)
+			{
+				/**
+				 * dynamic request; file requested path is a file, but has no extension (executable program).
+				 * Contact program with the method:
+				 *
+				 * handle_request (request, &response);
+				 * 
+				 * "request" now contains the data to be sent to the client.
+				 */
+				response->set_status(501);
+				response->set_content_type("text/plain");
+				response->set_body ("This server does not support dynamic content, yet.\n");
+			}
+			else
+			{
+				std::string content_type = utils::fileutils::content_type (filename.substr(filename.find_last_of(".")));
+				
+				response->set_content_type (content_type);
+				response->set_body (utils::fileutils::contents(filename));
+			}
+		}
+		catch (...)
+		{
+			// In case 301.html or 404.html does not exist, we'd have to return a generic error
+			response->set_content_type("");
+			response->set_status(404);
+		}
 		
-		http::response* response = new http::response (status_code, content_type);
+		/**
+		 * static request: a file or a directory
+		 *
+		 * debug data:
+		 */
+		std::string contents = response->body();
+		contents.append("Request line: " + request->status_line() + "<br />\n");
+		contents.append("URL: " + request->url() + "<br />\n");
+		contents.append("URI: " + request->uri() + "<br />\n");
+		contents.append("QS: " + request->query_string() + "<br />\n");
+		contents.append("Filename: " + filename + "<br />\n");
+		
 		response->set_body(contents);
 		
 		/**
 		 * write response to client
 		 */
-		std::string headersString = response->response_line();
+		std::string headersString = response->status_line();
 		std::map<std::string,std::string> headers = response->headers();
 		
 		for (std::map<std::string,std::string>::iterator it = headers.begin(); it != headers.end(); ++it)
@@ -118,7 +153,9 @@ int webserver::webserver::listen ()
 		client->send (response->body().c_str(), (int)response->body().length(), 0);
 		
 		client->close();
+		
 		delete client;
+		delete request;
 		delete response;
 	}
 	
