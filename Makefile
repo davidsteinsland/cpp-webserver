@@ -7,6 +7,6 @@ all:
 	@echo "See make.log for output."
 
 lib:
-	g++ -c http/request.cpp http/response.cpp utils/ioutils.cpp
-	ar rvs modules/libsol.a request.o response.o ioutils.o
-	rm request.o response.o ioutils.o
+	g++ -c http/request.cpp http/response.cpp utils/ioutils.cpp utils/stringutils.cpp
+	ar rvs modules/libsol.a request.o response.o ioutils.o stringutils.o
+	rm request.o response.o ioutils.o stringutils.o
