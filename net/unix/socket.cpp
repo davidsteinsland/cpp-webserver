@@ -13,4 +13,9 @@ void net::socket::close()
 
 }
 
+clientsocket* net::socket::get_connection()
+{
+
+}
+
 #endif
