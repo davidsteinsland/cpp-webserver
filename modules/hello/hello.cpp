@@ -25,7 +25,8 @@ extern "C" __declspec (dllexport) int handle_request(http::request* request, htt
 	response->set_status(200);
 	response->set_content_type ("text/html");
 	
-	std::string person = utils::stringutils::urldecode (request->query_string("name", "Mr. No Name!"));
+	std::string person = request->query_string("name", "Mr. No Name!");
+	person = utils::stringutils::urldecode (person);
 	
 	std::stringstream ss;
 	ss << "<h1>Hello, " << person << "!</h1>";
