@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+	<title>Modules | Sollandet HTTP Server</title>
+	<meta charset="utf-8" />
+	
+	<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+<body>
+	<div id="wrapper">
+		<h1>Modules / Dynamic Content</h1>
+		
+		<p>
+			Sollandet HTTP Server has preliminary support for dynamic pages. There's no support for scripting languages such as Python, PHP or Ruby yet. However, one can mimic these dynamic behaviours by creating a C++ shared library.
+		</p>
+		
+		<p>
+			You'll find some examples in the <var>modules/</var> directory.
+		</p>
+		
+		<h2>Demonstration</h2>
+		
+		<form action="hello" method="GET">
+			<p>
+				<label for="name">Your name:</label>
+				<input type="text" id="name" name="name" />
+				
+				<button type="submit">Send</button>
+			</p>
+		
+		</form>
+	</div>
+</body>
+</html>
