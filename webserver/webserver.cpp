@@ -2,6 +2,7 @@
 #define WEBSERVER_CPP 
 
 #include "webserver.h"
+#include "../config.h"
 #include "../net/socket.h"
 #include "../http/response.h"
 #include "../http/request.h"
@@ -13,11 +14,14 @@
 
 #ifdef __linux__
 	#include "../net/unix/socket.cpp"
+	#include "../net/unix/clientsocket.cpp"
+	#include "unix/module.cpp"
 #endif
 
 #ifdef _WIN32
 	#include "../net/win32/socket.cpp"
 	#include "../net/win32/clientsocket.cpp"
+	#include "win32/module.cpp"
 #endif
 
 #include <string>
@@ -42,8 +46,6 @@ int webserver::webserver::listen ()
 		return 0;
 	}
 	
-	std::string html_dir = "./public_html";
-	
 	while (true)
 	{
 		net::clientsocket* client = listenSocket->get_connection();
@@ -63,11 +65,16 @@ int webserver::webserver::listen ()
 		 */
 		
 		http::response* response = new http::response (200, "text/plain");
-		std::string filename = html_dir + request->uri();
+		std::string filename = config::HTML_ROOT + request->uri();
 		
 		bool dynamic_request = false;
 		
-		if ( !utils::fileutils::is_file (filename) )
+		if ( utils::fileutils::is_file (config::MODULES_ROOT + request->uri() + config::MODULE_EXT))
+		{
+			dynamic_request = true;
+			filename = config::MODULES_ROOT + request->uri() + config::MODULE_EXT;
+		}
+		else if ( !utils::fileutils::is_file (filename) )
 		{
 			if ( utils::fileutils::is_directory (filename))
 			{
@@ -77,21 +84,15 @@ int webserver::webserver::listen ()
 				}
 				else
 				{
-					filename = html_dir + "/301.html";
+					filename = config::HTML_ROOT + "/301.html";
 					response->set_status(301);
 				}
 			}
 			else
 			{
-				filename = html_dir + "/404.html";
+				filename = config::HTML_ROOT + "/404.html";
 				response->set_status(404);
 			}
-		}
-		else
-		{
-			// check if regular file, or executable (with no extension):
-			if ( request->uri().find('.') == std::string::npos)
-				dynamic_request = true;
 		}
 		
 		try
@@ -106,9 +107,24 @@ int webserver::webserver::listen ()
 				 * 
 				 * "request" now contains the data to be sent to the client.
 				 */
-				response->set_status(501);
-				response->set_content_type("text/plain");
-				response->set_body ("This server does not support dynamic content, yet.\n");
+				try
+				{
+					module* m = new module (filename.c_str());
+					void* initializer = m->call ("handle_request");
+					
+					// cast initializer to its proper type and use
+					typedef int (*handle_request_type)(http::request*,http::response*);
+					handle_request_type init_func = (handle_request_type) initializer;
+					
+					// call dynamic page
+					init_func (request, response);
+					
+					delete m;
+				}
+				catch (char const* c)
+				{
+					std::cerr << c << std::endl;
+				}
 			}
 			else
 			{
