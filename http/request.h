@@ -45,9 +45,13 @@ namespace http
 				return request_query_string;
 			}
 			
-			std::string query_string(std::string k)
+			std::string query_string(std::string k, std::string def)
 			{
-				return query_string_map.find(k)->second;
+				std::map<std::string,std::string>::iterator it = query_string_map.find(k);
+				
+				if (it != query_string_map.end())
+					return it->second;
+				return def;
 			}
 			
 			std::string header (std::string k)
