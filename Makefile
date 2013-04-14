@@ -6,7 +6,7 @@ all:
 	
 	@echo "See make.log for output."
 
-classes:
-	g++ -c **/*.cpp 2>make.log
-	
-	@echo "See make.log for output."
+lib:
+	g++ -c http/request.cpp http/response.cpp utils/ioutils.cpp
+	ar rvs modules/libsol.a request.o response.o ioutils.o
+	rm request.o response.o ioutils.o
