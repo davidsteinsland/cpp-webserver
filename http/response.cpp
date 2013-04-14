@@ -29,7 +29,7 @@ void http::response::create_status_lines()
 	status_codes[502] = "Bad Gateway";
 };
 
-http::response::response (int http_code, std::string type)
+http::response::response (int http_code, std::string type) : content_body("")
 {
 	this->create_status_lines();
 	
