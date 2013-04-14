@@ -1,13 +1,12 @@
 #include <iostream>
 #include "webserver/webserver.h"
-
-#define PORT 80
+#include "config.h"
 
 using namespace std;
 
 int main()
 {
-	webserver::webserver* ws = new webserver::webserver(PORT);
+	webserver::webserver* ws = new webserver::webserver(config::PORT);
 	
 	if (ws->listen() == 0)
 		cout << "Error!" << endl;
