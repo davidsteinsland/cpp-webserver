@@ -40,6 +40,8 @@ int net::socket::listen(int port)
 		close();
 		return 0;
 	}
+
+	return 1;
 }
 
 void net::socket::close()
