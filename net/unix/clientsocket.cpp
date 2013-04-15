@@ -4,10 +4,15 @@
 #include "../clientsocket.h"
 #include "../../http/request.h"
 #include <iostream>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <netdb.h>
 
 #define DEFAULT_BUFFER_SIZE 512
 
-net::clientsocket::clientsocket (SOCKET s, SOCKADDR_IN client)
+net::clientsocket::clientsocket (int s, SOCKADDR_IN client)
 {
 	socket = s;
 	
@@ -16,17 +21,16 @@ net::clientsocket::clientsocket (SOCKET s, SOCKADDR_IN client)
 	
 	char requestBuffer[DEFAULT_BUFFER_SIZE];
 
-	bytesRecieved = recv(socket, requestBuffer, DEFAULT_BUFFER_SIZE, 0);
+	bytesRecieved = read(socket, requestBuffer, DEFAULT_BUFFER_SIZE);
 	
 	if ( bytesRecieved == 0 )
 	{
 		std::cout << "Connection closed" << std::endl;
 	}
-	else if (bytesRecieved == SOCKET_ERROR)
+	else if (bytesRecieved == -1)
 	{
-		std::cout << "recv failed: " << WSAGetLastError() << std::endl;
+		std::cout << "recv failed: " << std::endl;
 		this->close();
-		WSACleanup();
 	}
 	
 	body = std::string(requestBuffer, 0, bytesRecieved);
@@ -44,12 +48,12 @@ http::request* net::clientsocket::get_request()
 
 int net::clientsocket::send(const char* buf, int len, int flags)
 {
-	return ::send (socket, buf, len, flags);
+	return ::send (socket, buf, len, 0);
 }
 
 void net::clientsocket::close()
 {
-	closesocket(socket);
+	::close(socket);
 }
 
 #endif

@@ -10,6 +10,9 @@
 
 #ifdef _WIN32
 	#include <windows.h>
+#else
+	#include <sys/types.h>
+	#include <sys/stat.h>
 #endif
 
 std::map<std::string,std::string> utils::fileutils::mime_types;
@@ -83,7 +86,7 @@ bool utils::fileutils::is_directory (std::string path)
 		return false;
 	#else
 	struct stat st;
-	if (stat(path,&st) == 0 && st.st_mode & S_IFDIR != 0)
+	if (stat(path.c_str(),&st) == 0 && st.st_mode & S_IFDIR != 0)
 		return true;
 	#endif
 }
