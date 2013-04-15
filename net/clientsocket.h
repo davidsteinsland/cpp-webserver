@@ -7,7 +7,7 @@
 #include "../http/request.h"
 
 #ifdef __linux__
-typedef struct SOCKADDR_IN client;
+typedef struct sockaddr_in SOCKADDR_IN;
 #endif
 
 namespace net

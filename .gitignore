@@ -2,3 +2,4 @@ test.sh
 tests/
 *.o
 *.exe
+*.out

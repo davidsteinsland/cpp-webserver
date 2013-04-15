@@ -3,6 +3,7 @@
 
 #include "../clientsocket.h"
 #include "../../http/request.h"
+#include <unistd.h>
 #include <iostream>
 #include <sys/socket.h>
 #include <netinet/in.h>

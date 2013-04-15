@@ -3,6 +3,7 @@
 
 #include "../socket.h"
 #include "../clientsocket.h"
+#include <unistd.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
@@ -50,9 +51,9 @@ net::clientsocket* net::socket::get_connection()
 {
 	struct sockaddr_in client;
 	int l = sizeof (client);
-	int msgSocket = ::accept (sockfd, (struct sockaddr*)&client, &l);
+	int msgSocket = ::accept (sockfd, (struct sockaddr*)&client, (socklen_t*)&l);
 
-	net::clientsocket* clientSocket = new net::clientsocket (msgSocket, from);
+	net::clientsocket* clientsocket = new net::clientsocket (msgSocket, client);
 
 	if (msgSocket == -1)
 	{
@@ -61,7 +62,7 @@ net::clientsocket* net::socket::get_connection()
 		return NULL;
 	}
 
-	return clientSocket;
+	return clientsocket;
 }
 
 #endif
