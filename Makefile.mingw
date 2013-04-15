@@ -1,9 +1,6 @@
 
 all:
-	#g++ -o webserver /c/mingw/lib/libws2_32.a -lwsock32 app.cpp *.o
-	
-	g++ **/*.cpp app.cpp -ldl -o webserver.out 2>make.log
-	
+	g++ **/*.cpp app.cpp -lwsock32 -o webserver 2>make.log
 	@echo "See make.log for output."
 
 lib:
