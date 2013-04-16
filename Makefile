@@ -10,4 +10,5 @@ lib:
 	rm request.o response.o ioutils.o stringutils.o
 
 modules: lib
-	make -C modules/hello-unix/
+	make -C modules/basic/
+	make -C modules/hello/
