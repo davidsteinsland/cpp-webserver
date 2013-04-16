@@ -8,15 +8,9 @@
 #include "../http/request.h"
 #include "../utils/fileutils.h"
 
-#ifdef _WIN32
-	#include "../net/win32/socket.cpp"
-	#include "../net/win32/clientsocket.cpp"
-	#include "win32/module.cpp"
-#else
-	#include "../net/unix/socket.cpp"
-	#include "../net/unix/clientsocket.cpp"
-	#include "unix/module.cpp"
-#endif
+#include "../net/socket.h"
+#include "../net/clientsocket.h"
+#include "module.h"
 
 #include <string>
 #include <iostream>
@@ -50,7 +44,7 @@ int webserver::webserver::listen ()
 			continue;
 		}
 		
-		http::request* request = new http::request(client->recieve());
+		http::request* request = http::request::parse(client->recieve());
 		
 		/**
 		 * Try to load the following files, in prioritized order:
@@ -62,97 +56,106 @@ int webserver::webserver::listen ()
 		 */
 		
 		http::response* response = new http::response (200, "text/plain");
-		std::string filename = config::HTML_ROOT + request->uri();
 		
-		bool dynamic_request = false;
-		
-		if ( utils::fileutils::is_file (config::MODULES_ROOT + request->uri() + config::MODULE_EXT))
+		if (request == NULL)
 		{
-			dynamic_request = true;
-			filename = config::MODULES_ROOT + request->uri() + config::MODULE_EXT;
+			// invalid request; 400 Bad Request
+			response->set_status(400);
+			response->set_body ("Invalid Request");
 		}
-		else if ( !utils::fileutils::is_file (filename) )
+		else
 		{
-			if ( utils::fileutils::is_directory (filename))
+			std::string filename = config::HTML_ROOT + request->uri();
+			bool dynamic_request = false;
+			
+			
+			if ( utils::fileutils::is_file (config::MODULES_ROOT + request->uri() + config::MODULE_EXT))
 			{
-				if ( utils::fileutils::is_file (filename + "index.html") )
+				dynamic_request = true;
+				filename = config::MODULES_ROOT + request->uri() + config::MODULE_EXT;
+			}
+			else if ( !utils::fileutils::is_file (filename) )
+			{
+				if ( utils::fileutils::is_directory (filename))
 				{
-					filename = filename + "index.html";
+					if ( utils::fileutils::is_file (filename + "index.html") )
+					{
+						filename = filename + "index.html";
+					}
+					else
+					{
+						filename = config::HTML_ROOT + "/301.html";
+						response->set_status(301);
+					}
 				}
 				else
 				{
-					filename = config::HTML_ROOT + "/301.html";
-					response->set_status(301);
+					filename = config::HTML_ROOT + "/404.html";
+					response->set_status(404);
 				}
 			}
-			else
+			
+			try
 			{
-				filename = config::HTML_ROOT + "/404.html";
+				if (dynamic_request)
+				{
+					/**
+					 * dynamic request; file requested path is a file, but has no extension (executable program).
+					 * Contact program with the method:
+					 *
+					 * handle_request (request, &response);
+					 * 
+					 * "request" now contains the data to be sent to the client.
+					 */
+					try
+					{
+						module* m = new module (filename.c_str());
+						void* initializer = m->call ("handle_request");
+						
+						// cast initializer to its proper type and use
+						typedef int (*handle_request_type)(http::request*,http::response*);
+						handle_request_type init_func = (handle_request_type) initializer;
+						
+						// call dynamic page
+						init_func (request, response);
+						
+						delete m;
+					}
+					catch (char const* c)
+					{
+						std::cerr << c << std::endl;
+					}
+				}
+				else
+				{
+					unsigned ext_pos = filename.find_last_of(".");
+					if (ext_pos == std::string::npos)
+						response->set_content_type("text/plain");
+					else
+						response->set_content_type (utils::fileutils::content_type (filename.substr(ext_pos), "text/plain"));
+					response->set_body (utils::fileutils::contents(filename));
+				}
+			}
+			catch (...)
+			{
+				// In case 301.html or 404.html does not exist, we'd have to return a generic error
+				response->set_content_type("");
 				response->set_status(404);
 			}
+			
+			/**
+			 * debug data
+			 */
+			std::string contents = response->body();
+			contents.append("Request line: " + request->status_line() + "<br />\n");
+			contents.append("URL: " + request->url() + "<br />\n");
+			contents.append("URI: " + request->uri() + "<br />\n");
+			contents.append("QS: " + request->query_string() + "<br />\n");
+			contents.append("Filename: " + filename + "<br />\n");
+			
+			response->set_body(contents);
 		}
 		
-		try
-		{
-			if (dynamic_request)
-			{
-				/**
-				 * dynamic request; file requested path is a file, but has no extension (executable program).
-				 * Contact program with the method:
-				 *
-				 * handle_request (request, &response);
-				 * 
-				 * "request" now contains the data to be sent to the client.
-				 */
-				try
-				{
-					module* m = new module (filename.c_str());
-					void* initializer = m->call ("handle_request");
-					
-					// cast initializer to its proper type and use
-					typedef int (*handle_request_type)(http::request*,http::response*);
-					handle_request_type init_func = (handle_request_type) initializer;
-					
-					// call dynamic page
-					init_func (request, response);
-					
-					delete m;
-				}
-				catch (char const* c)
-				{
-					std::cerr << c << std::endl;
-				}
-			}
-			else
-			{
-				unsigned ext_pos = filename.find_last_of(".");
-				if (ext_pos == std::string::npos)
-					response->set_content_type("text/plain");
-				else
-					response->set_content_type (utils::fileutils::content_type (filename.substr(ext_pos), "text/plain"));
-				response->set_body (utils::fileutils::contents(filename));
-			}
-		}
-		catch (...)
-		{
-			// In case 301.html or 404.html does not exist, we'd have to return a generic error
-			response->set_content_type("");
-			response->set_status(404);
-		}
-		
-		/**
-		 * static request: a file or a directory
-		 *
-		 * debug data:
-		 */
-		std::string contents = response->body();
-		contents.append("Request line: " + request->status_line() + "<br />\n");
-		contents.append("URL: " + request->url() + "<br />\n");
-		contents.append("URI: " + request->uri() + "<br />\n");
-		contents.append("QS: " + request->query_string() + "<br />\n");
-		contents.append("Filename: " + filename + "<br />\n");
-		
-		response->set_body(contents);
 		
 		/**
 		 * write response to client
