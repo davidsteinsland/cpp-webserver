@@ -4,7 +4,12 @@
 #ifndef CLIENT_SOCKET_H
 #define CLIENT_SOCKET_H 
 
-#include <winsock2.h>
+#ifdef _WIN32
+	#include <winsock2.h>
+#else
+	#include <netinet/in.h>
+#endif
+
 #include <string>
 #include "../http/response.h"
 

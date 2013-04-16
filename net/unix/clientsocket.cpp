@@ -30,7 +30,7 @@ std::string net::clientsocket::recieve()
 {
 	char requestBuffer[DEFAULT_BUFFER_SIZE];
 
-	bytesRecieved = read(socket, requestBuffer, DEFAULT_BUFFER_SIZE);
+	int bytesRecieved = ::recv(socket, requestBuffer, DEFAULT_BUFFER_SIZE, 0);
 	
 	if ( bytesRecieved == 0 )
 	{

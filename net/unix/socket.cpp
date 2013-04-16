@@ -53,14 +53,14 @@ int net::socket::listen(int port)
 void net::socket::close()
 {
 	listening = false;
-	::close(sockfd);
+	::close(socket);
 }
 
 net::clientsocket* net::socket::accept()
 {
 	struct sockaddr_in client;
 	int l = sizeof (client);
-	int msgSocket = ::accept (sockfd, (struct sockaddr*)&client, (socklen_t*)&l);
+	int msgSocket = ::accept (socket, (struct sockaddr*)&client, (socklen_t*)&l);
 
 	net::clientsocket* clientsocket = new net::clientsocket (msgSocket, client);
 
