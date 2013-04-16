@@ -1,8 +1,8 @@
 
 all:
-	g++ -c dynwindows.cpp
-	g++ -shared -g -o ../dynwindows.dll \
+	g++ -c hello_win32.cpp -o hello.o
+	g++ -shared -g -o ../hello.dll \
     -Wl,--export-all-symbols \
     -Wl,--enable-auto-import \
-    -Wl,--whole-archive dynwindows.o \
+    -Wl,--whole-archive hello.o \
     -Wl,--no-whole-archive ../libsol.a
