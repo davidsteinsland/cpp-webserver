@@ -48,12 +48,15 @@ int webserver::webserver::listen ()
 	
 	while (true)
 	{
-		net::clientsocket* client = listenSocket->get_connection();
+		net::clientsocket* client = listenSocket->accept();
 		
 		if ( client == NULL )
+		{
+			delete client;
 			continue;
+		}
 		
-		http::request* request = client->get_request();
+		http::request* request = new http::request(client->recieve());
 		
 		/**
 		 * Try to load the following files, in prioritized order:
@@ -158,16 +161,7 @@ int webserver::webserver::listen ()
 		/**
 		 * write response to client
 		 */
-		std::string headersString = response->status_line();
-		std::map<std::string,std::string> headers = response->headers();
-		
-		for (std::map<std::string,std::string>::iterator it = headers.begin(); it != headers.end(); ++it)
-			headersString.append (it->first + ": " + it->second + "\r\n");
-		headersString.append("\r\n");
-		
-		client->send (headersString.c_str(), (int)headersString.length(), 0);
-		client->send (response->body().c_str(), (int)response->body().length(), 0);
-		
+		client->send(response);
 		client->close();
 		
 		delete client;

@@ -10,9 +10,14 @@ namespace net
 {
 	class socket
 	{
+		private:
+			bool listening;
+			int socket;
+			struct sockaddr_in address;
 		public:
+			~socket();
 			int listen(int);
-			clientsocket* get_connection();
+			clientsocket* accept();
 			void close();
 	};
 };

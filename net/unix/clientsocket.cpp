@@ -2,7 +2,10 @@
 #define CLIENT_SOCKET_CPP 
 
 #include "../clientsocket.h"
-#include "../../http/request.h"
+#include "../../http/response.h"
+#include <map>
+#include <string>
+
 #include <unistd.h>
 #include <iostream>
 #include <sys/socket.h>
@@ -13,13 +16,18 @@
 
 #define DEFAULT_BUFFER_SIZE 512
 
-net::clientsocket::clientsocket (int s, SOCKADDR_IN client)
+net::clientsocket::clientsocket (int s, struct sockaddr_in addr) : socket(s), address(addr)
 {
-	socket = s;
 	
-	client_address = inet_ntoa (client.sin_addr);
-	client_port = ntohs(client.sin_port);
-	
+}
+
+net::clientsocket::~clientsocket()
+{
+	close();
+}
+
+std::string net::clientsocket::recieve()
+{
 	char requestBuffer[DEFAULT_BUFFER_SIZE];
 
 	bytesRecieved = read(socket, requestBuffer, DEFAULT_BUFFER_SIZE);
@@ -34,17 +42,24 @@ net::clientsocket::clientsocket (int s, SOCKADDR_IN client)
 		this->close();
 	}
 	
-	body = std::string(requestBuffer, 0, bytesRecieved);
+	return std::string(requestBuffer, 0, bytesRecieved);
 }
 
-net::clientsocket::~clientsocket()
+int net::clientsocket::send (http::response* res)
 {
-	delete client_address;
+	std::string headersString = res->status_line();
+	std::map<std::string,std::string> headers = res->headers();
+	
+	for (std::map<std::string,std::string>::iterator it = headers.begin(); it != headers.end(); ++it)
+		headersString.append (it->first + ": " + it->second + "\r\n");
+	headersString.append("\r\n");
+	
+	return send (headersString + res->body());
 }
 
-http::request* net::clientsocket::get_request()
+int net::clientsocket::send (std::string data)
 {
-	return new http::request(body);
+	return send (data.c_str(), data.length(), 0);
 }
 
 int net::clientsocket::send(const char* buf, int len, int flags)

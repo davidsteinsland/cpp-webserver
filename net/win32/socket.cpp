@@ -9,11 +9,18 @@
 #include "../clientsocket.h"
 #include "../../http/request.h"
 
-SOCKET serverSocket;
-WSAData wsaData;
+net::socket::~socket()
+{
+	close();
+}
 
 int net::socket::listen(int port)
 {
+	if (listening)
+		return 0;
+
+	WSAData wsaData;
+	
 	if (WSAStartup (0x0202, &wsaData) != NO_ERROR)
 	{
 		return 0; //For some reason we couldn't start Winsock
@@ -25,49 +32,49 @@ int net::socket::listen(int port)
         return 0;
     }
 
-    SOCKADDR_IN serverService;
-    serverService.sin_family = AF_INET;
-    serverService.sin_port = htons (port);
+    address.sin_family = AF_INET;
+    address.sin_port = htons (port);
 
     //Accept a connection from any IP using INADDR_ANY
     //You could pass inet_addr("0.0.0.0") instead to accomplish the 
     //same thing. If you want only to watch for a connection from a 
     //specific IP, specify that instead.
-    serverService.sin_addr.s_addr = htonl (INADDR_ANY);  
+    address.sin_addr.s_addr = htonl (INADDR_ANY);  
 
-    serverSocket = ::socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    socket = (int) ::socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-    if (serverSocket == INVALID_SOCKET)
+    if ((SOCKET)socket == INVALID_SOCKET)
     {
         return 0; 
     }
 
-	if(bind(serverSocket, (SOCKADDR*)&serverService, sizeof(serverService)) == SOCKET_ERROR){
-		closesocket(serverSocket);
-		WSACleanup();
+	if (bind ((SOCKET)socket, (struct sockaddr*)&address, sizeof(address)) == SOCKET_ERROR)
+	{
+		close();
 		return 0;
 	}
 
-	if(::listen(serverSocket, 5) == SOCKET_ERROR){
-		closesocket(serverSocket);
-		WSACleanup();
+	if(::listen(socket, 5) == SOCKET_ERROR)
+	{
+		close();
 		return 0;
 	}
+	
+	listening = true;
 	
 	return 1;
 }
 
-net::clientsocket* net::socket::get_connection ()
+net::clientsocket* net::socket::accept ()
 {
 	SOCKADDR_IN from;
 	int l = sizeof (from);
-	SOCKET msgSocket = accept (serverSocket, (SOCKADDR*)&from, &l);
+	int clientfd = ::accept (socket, (struct sockaddr*)&from, &l);
 	
-	clientsocket* clientSocket = new clientsocket(msgSocket, from);
+	clientsocket* clientSocket = new clientsocket(clientfd, from);
 	
-	if (msgSocket == INVALID_SOCKET)
+	if ((SOCKET)clientfd == INVALID_SOCKET)
 	{
-		clientSocket->close();
 		delete clientSocket;
 		return NULL;
 	}
@@ -77,11 +84,9 @@ net::clientsocket* net::socket::get_connection ()
 
 void net::socket::close ()
 {
-	 //Close the socket if it exists
-    if (serverSocket)
-        closesocket(serverSocket);
-
-    WSACleanup(); //Clean up Winsock
+	listening = false;
+	closesocket(socket);
+    WSACleanup();
 }
 
 #endif
