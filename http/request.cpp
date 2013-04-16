@@ -34,9 +34,10 @@ http::request* http::request::parse (std::string str)
 			std::getline (lineStream, req->type, ' ');
 			std::getline (lineStream, req->request_uri, ' ');
 			
-			unsigned pos = req->request_uri.find('?');
-			if ( pos != std::string::npos)
+			unsigned pos;
+			if (req->request_uri.length() > 1 && (pos = req->request_uri.find('?')) != std::string::npos && pos <= req->request_uri.length())
 			{
+std::cout << req->request_uri << " pos: " << pos << std::endl;
 				req->request_query_string = req->request_uri.substr (pos);
 				req->request_uri = req->request_uri.substr(0, pos);
 				
