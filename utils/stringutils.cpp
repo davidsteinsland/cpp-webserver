@@ -11,7 +11,8 @@ std::string utils::stringutils::urldecode (std::string &url)
 {
 	std::string ret;
 	char ch;
-	int i, j;
+	unsigned i;
+	int j;
 	for (i = 0; i < url.length(); i++)
 	{
 		if (int (url[i]) == 37)

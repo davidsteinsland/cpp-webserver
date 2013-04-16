@@ -49,7 +49,7 @@ void http::request::parse (std::string str)
 			std::getline (lineStream, type, ' ');
 			std::getline (lineStream, request_uri, ' ');
 			
-			int pos = request_uri.find('?');
+			unsigned pos = request_uri.find('?');
 			if ( pos != std::string::npos)
 			{
 				request_query_string = request_uri.substr (pos);
