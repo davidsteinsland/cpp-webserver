@@ -16,3 +16,29 @@ Målet er å lage en liten effektiv webserver kryss-kompatibel med Mac, Windows 
 
 ## Gruppeinformasjon
 David Steinsland, s180486, david@davidsteinsland.net
+
+## Bygging
+### Windows
+
+**Bygge prosjektet**
+
+```bash
+mingw32-make -f Makefile.mingw
+```
+
+**Bygge moduler**
+```bash
+mingw32-make -f Makefile.mingw modules
+```
+
+### UNIX
+
+```bash
+make
+```
+
+## Kjøring
+
+```bash
+./webserver
+```
