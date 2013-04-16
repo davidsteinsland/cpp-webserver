@@ -29,9 +29,10 @@ webserver::webserver::~webserver()
 
 int webserver::webserver::listen ()
 {
-	if (listenSocket->listen(port) != 1)
+	int error;
+	if ( (error = listenSocket->listen(port)) != 0)
 	{
-		return 0;
+		return error;
 	}
 	
 	while (true)
@@ -74,25 +75,22 @@ int webserver::webserver::listen ()
 				dynamic_request = true;
 				filename = config::MODULES_ROOT + request->uri() + config::MODULE_EXT;
 			}
-			else if ( !utils::fileutils::is_file (filename) )
+			else if ( utils::fileutils::is_directory (filename))
 			{
-				if ( utils::fileutils::is_directory (filename))
+				if ( utils::fileutils::is_file (filename + "index.html") )
 				{
-					if ( utils::fileutils::is_file (filename + "index.html") )
-					{
-						filename = filename + "index.html";
-					}
-					else
-					{
-						filename = config::HTML_ROOT + "/301.html";
-						response->set_status(301);
-					}
+					filename = filename + "index.html";
 				}
 				else
 				{
-					filename = config::HTML_ROOT + "/404.html";
-					response->set_status(404);
+					filename = config::HTML_ROOT + "/301.html";
+					response->set_status(301);
 				}
+			}
+			else if ( !utils::fileutils::is_file (filename) )
+			{
+				filename = config::HTML_ROOT + "/404.html";
+				response->set_status(404);
 			}
 			
 			try
@@ -168,7 +166,7 @@ int webserver::webserver::listen ()
 		delete response;
 	}
 	
-	return 1;
+	return 0;
 }
 
 #endif

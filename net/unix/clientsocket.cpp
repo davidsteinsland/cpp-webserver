@@ -5,14 +5,8 @@
 #include "../../http/response.h"
 #include <map>
 #include <string>
-
-#include <unistd.h>
-#include <iostream>
 #include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #include <sys/types.h>
-#include <netdb.h>
 
 #define DEFAULT_BUFFER_SIZE 512
 
@@ -34,12 +28,12 @@ std::string net::clientsocket::recieve()
 	
 	if ( bytesRecieved == 0 )
 	{
-		std::cout << "Connection closed" << std::endl;
+		return "";
 	}
 	else if (bytesRecieved == -1)
 	{
-		std::cout << "recv failed: " << std::endl;
 		this->close();
+		return "";
 	}
 	
 	return std::string(requestBuffer, 0, bytesRecieved);

@@ -6,7 +6,6 @@
 
 #include <string>
 #include <map>
-#include <iostream>
 #include <sstream>
 
 http::request::request() : type(""), protocol(""), request_url(""), request_uri(""), request_query_string("")
@@ -37,7 +36,6 @@ http::request* http::request::parse (std::string str)
 			unsigned pos;
 			if (req->request_uri.length() > 1 && (pos = req->request_uri.find('?')) != std::string::npos && pos <= req->request_uri.length())
 			{
-std::cout << req->request_uri << " pos: " << pos << std::endl;
 				req->request_query_string = req->request_uri.substr (pos);
 				req->request_uri = req->request_uri.substr(0, pos);
 				

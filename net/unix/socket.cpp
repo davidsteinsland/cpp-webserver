@@ -3,15 +3,10 @@
 
 #include "../socket.h"
 #include "../clientsocket.h"
-#include <unistd.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/un.h>
+#include <cstring> /* memset */
 #include <cerrno>
-
-#include <iostream>
 
 net::socket::~socket()
 {
@@ -21,7 +16,7 @@ net::socket::~socket()
 int net::socket::listen(int port)
 {
 	if (listening)
-		return 0;
+		return -1;
 
 	memset (&address, 0, sizeof (address));
 	address.sin_family = AF_INET;
@@ -31,33 +26,29 @@ int net::socket::listen(int port)
 
 	if ( (socket = ::socket(AF_INET, SOCK_STREAM, 0)) == -1)
 	{
-		std::cout << "Could not create socket" << std::endl;
-		return 0;
+		return errno;
 	}
 
 	int yes = 1;
 	if (::setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
 	{
 		close();
-		return 0;
+		return errno;
 	}
 
 	if (::bind (socket, (struct sockaddr*)&address, sizeof(struct sockaddr)) == -1)
 	{
-		std::cout << "Could not bind!" << std::endl;
-		std::cout << errno << std::endl;
 		close();
-		return 0;
+		return errno;
 	}
 
 	if (::listen (socket, 5) == -1)
 	{
-		std::cout << "Could not listen" << std::endl;
 		close();
-		return 0;
+		return errno;
 	}
 
-	return 1;
+	return 0;
 }
 
 void net::socket::close()

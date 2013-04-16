@@ -17,19 +17,19 @@ net::socket::~socket()
 int net::socket::listen(int port)
 {
 	if (listening)
-		return 0;
+		return -1;
 
 	WSAData wsaData;
 	
 	if (WSAStartup (0x0202, &wsaData) != NO_ERROR)
 	{
-		return 0; //For some reason we couldn't start Winsock
+		return GetLastError(); //For some reason we couldn't start Winsock
     }
 
     if (wsaData.wVersion != 0x0202) //Wrong Winsock version?
     {
         WSACleanup ();
-        return 0;
+        return GetLastError();
     }
 
     address.sin_family = AF_INET;
@@ -45,24 +45,24 @@ int net::socket::listen(int port)
 
     if ((SOCKET)socket == INVALID_SOCKET)
     {
-        return 0; 
+        return -1; 
     }
 
 	if (bind ((SOCKET)socket, (struct sockaddr*)&address, sizeof(address)) == SOCKET_ERROR)
 	{
 		close();
-		return 0;
+		return GetLastError();
 	}
 
 	if(::listen(socket, 5) == SOCKET_ERROR)
 	{
 		close();
-		return 0;
+		return GetLastError();
 	}
 	
 	listening = true;
 	
-	return 1;
+	return 0;
 }
 
 net::clientsocket* net::socket::accept ()
