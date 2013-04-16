@@ -2,6 +2,7 @@
 #define MODULE_CPP
 
 #include "../module.h"
+#include <cstddef>
 #include <dlfcn.h>
 
 webserver::module::module (const char* module)
