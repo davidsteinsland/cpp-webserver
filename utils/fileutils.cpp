@@ -36,7 +36,7 @@ std::string utils::fileutils::contents (std::string filename)
 	throw(errno);
 }
 
-std::string utils::fileutils::content_type (std::string key)
+std::string utils::fileutils::content_type (std::string key, std::string def)
 {
 	if (mime_types.size() == 0)
 	{
@@ -59,7 +59,11 @@ std::string utils::fileutils::content_type (std::string key)
 		}
 	}
 	
-	return mime_types.find(key)->second;
+	std::map<std::string,std::string>::iterator it = mime_types.find(key);
+				
+	if (it != mime_types.end())
+		return it->second;
+	return def;
 }
 
 bool utils::fileutils::is_file (std::string filename)

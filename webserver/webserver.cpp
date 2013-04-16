@@ -8,20 +8,14 @@
 #include "../http/request.h"
 #include "../utils/fileutils.h"
 
-#ifdef TARGET_OS_MAC
-	#error Mac is not supported yet
-#endif
-
-#ifdef __linux__
-	#include "../net/unix/socket.cpp"
-	#include "../net/unix/clientsocket.cpp"
-	#include "unix/module.cpp"
-#endif
-
 #ifdef _WIN32
 	#include "../net/win32/socket.cpp"
 	#include "../net/win32/clientsocket.cpp"
 	#include "win32/module.cpp"
+#else
+	#include "../net/unix/socket.cpp"
+	#include "../net/unix/clientsocket.cpp"
+	#include "unix/module.cpp"
 #endif
 
 #include <string>
@@ -131,9 +125,11 @@ int webserver::webserver::listen ()
 			}
 			else
 			{
-				std::string content_type = utils::fileutils::content_type (filename.substr(filename.find_last_of(".")));
-				
-				response->set_content_type (content_type);
+				unsigned ext_pos = filename.find_last_of(".");
+				if (ext_pos == std::string::npos)
+					response->set_content_type("text/plain");
+				else
+					response->set_content_type (utils::fileutils::content_type (filename.substr(ext_pos), "text/plain"));
 				response->set_body (utils::fileutils::contents(filename));
 			}
 		}
