@@ -1,6 +1,6 @@
 
 all:
-	g++ -Wall **/*.cpp app.cpp -lwsock32 -o webserver 2>make.log
+	g++ -Wall -g http/*.cpp net/win32/*.cpp utils/*.cpp webserver/*.cpp webserver/win32/*.cpp app.cpp -lwsock32 -o webserver 2>make.log
 	@echo "See make.log for output."
 
 lib:
