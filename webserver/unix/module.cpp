@@ -21,7 +21,7 @@ webserver::module::~module()
 
 void* webserver::module::call(const char* method)
 {
-	void* initializer = dlsym(library,"SDL_Init");
+	void* initializer = dlsym(library, "handle_request");
 	if (initializer == NULL)
 	{
 	   throw ("Could not call method");

@@ -5,6 +5,9 @@ all:
 	@echo "See make.log for output."
 
 lib:
-	g++ -c http/request.cpp http/response.cpp utils/ioutils.cpp utils/stringutils.cpp
-	ar rvs modules/libsol.a request.o response.o ioutils.o stringutils.o
+	g++ -shared -fPIC -c http/request.cpp http/response.cpp utils/ioutils.cpp utils/stringutils.cpp
+	ar -rv modules/libsol-linux.a request.o response.o ioutils.o stringutils.o
 	rm request.o response.o ioutils.o stringutils.o
+
+modules: lib
+	make -C modules/hello-unix/
