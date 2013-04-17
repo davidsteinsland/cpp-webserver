@@ -121,7 +121,7 @@ void *webserver::handle_request (void *c)
 	
 	http::response* response = new http::response (200, "text/plain");
 	
-	if (request == NULL)
+	if (request == NULL || (request->method() != "POST" && request->method() != "GET"))
 	{
 		// invalid request; 400 Bad Request
 		response->set_status(400);
@@ -129,14 +129,14 @@ void *webserver::handle_request (void *c)
 	}
 	else
 	{
-		std::string filename = config::HTML_ROOT + request->uri();
+		std::string filename = config::HTML_ROOT + request->file();
 		bool dynamic_request = false;
 		
 		
-		if ( utils::fileutils::is_file (config::MODULES_ROOT + request->uri() + config::MODULE_EXT))
+		if ( utils::fileutils::is_file (config::MODULES_ROOT + request->file() + config::MODULE_EXT))
 		{
 			dynamic_request = true;
-			filename = config::MODULES_ROOT + request->uri() + config::MODULE_EXT;
+			filename = config::MODULES_ROOT + request->file() + config::MODULE_EXT;
 		}
 		else if ( utils::fileutils::is_directory (filename))
 		{
@@ -207,14 +207,22 @@ void *webserver::handle_request (void *c)
 		/**
 		 * debug data
 		 */
-		/*std::string contents = response->body();
+		std::string contents = response->body();
 		contents.append("Request line: " + request->status_line() + "<br />\n");
 		contents.append("URL: " + request->url() + "<br />\n");
 		contents.append("URI: " + request->uri() + "<br />\n");
+		contents.append("File: " + request->file() + "<br />\n");
 		contents.append("QS: " + request->query_string() + "<br />\n");
+		contents.append("Protocol: " + request->protocol() + "<br />\n");
+		contents.append("Method: " + request->method() + "<br />\n");
 		contents.append("Filename: " + filename + "<br />\n");
+		contents.append("Headers:<br />\n");
 		
-		response->set_body(contents);*/
+		std::map<std::string,std::string> headers = request->headers();
+		for (std::map<std::string,std::string>::iterator it = headers.begin(); it != headers.end(); ++it)
+			contents.append (it->first + ": " + it->second + "<br />\n");
+		
+		response->set_body(contents);
 	}
 	
 	
