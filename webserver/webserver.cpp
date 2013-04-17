@@ -25,6 +25,11 @@ webserver::webserver::~webserver()
 	delete listenSocket;
 }
 
+void webserver::webserver::shutdown()
+{
+	started = false;
+}
+
 int webserver::webserver::listen ()
 {
 	int error;
@@ -33,7 +38,9 @@ int webserver::webserver::listen ()
 		return error;
 	}
 	
-	while (true)
+	started = true;
+	
+	while (started)
 	{
 		net::clientsocket* client = listenSocket->accept();
 		

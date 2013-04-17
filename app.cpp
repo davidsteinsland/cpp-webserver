@@ -3,26 +3,41 @@
 #include "config.h"
 
 #ifdef _WIN32
-#include <string.h> /* _strerror() */
+	#include <string.h> /* _strerror() */
+	#include <malloc.h> /* _alloca() */
+	#define strerror(x)  _ultoa(x, (char *) _alloca(sizeof(x) *3 ), 10)
+	#define WINCDECL __cdecl
 #else
-#include <cstring> /* strerror() */
+	#define WINCDECL
+	#include <cstring> /* strerror() */
 #endif
 
-#ifdef _strerror
-#def strerror(X) _strerror(X)
-#endif
+#include <signal.h>
 
-using namespace std;
+webserver::webserver* ws;
+int exit_flag;
+
+static void WINCDECL signal_handler(int sig_num)
+{
+	exit_flag = sig_num;
+	
+	ws->shutdown();
+	delete ws;
+}
 
 int main()
 {
-	webserver::webserver* ws = new webserver::webserver(config::PORT);
+	/* Setup signal handler: quit on Ctrl-C */
+	signal(SIGTERM, signal_handler);
+	signal(SIGINT, signal_handler);
+  
+	ws = new webserver::webserver(config::PORT);
 	int error;
 	if ( (error = ws->listen()) != 0)
 	{
-		cout << "Error: " << endl;
-		cout << strerror (error) << endl;
+		std::cout << "Error: " << std::endl;
+		std::cout << strerror (error) << std::endl;
 	}
 	
-	delete ws;
+	std::cout << "Shutting down ..." << std::endl;
 }

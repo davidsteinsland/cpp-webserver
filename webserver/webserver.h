@@ -15,10 +15,12 @@ namespace webserver
 		private:
 			net::socket* listenSocket;
 			int port;
+			bool started;
 		
 		public:
 			webserver(int);
 			~webserver();
+			void shutdown();
 			
 			int listen();
 	};
