@@ -95,7 +95,7 @@ void *webserver::webserver::handle_request (void *c)
 	pthread_t pid = workers.front();
 	net::clientsocket* client = (net::clientsocket*) c;
 	
-	if (client == NULL)
+	if (client == NULL || !client->valid())
 	{
 		return 0;
 	}
@@ -207,14 +207,14 @@ void *webserver::webserver::handle_request (void *c)
 		/**
 		 * debug data
 		 */
-		std::string contents = response->body();
+		/*std::string contents = response->body();
 		contents.append("Request line: " + request->status_line() + "<br />\n");
 		contents.append("URL: " + request->url() + "<br />\n");
 		contents.append("URI: " + request->uri() + "<br />\n");
 		contents.append("QS: " + request->query_string() + "<br />\n");
 		contents.append("Filename: " + filename + "<br />\n");
 		
-		response->set_body(contents);
+		response->set_body(contents);*/
 	}
 	
 	
@@ -227,6 +227,8 @@ void *webserver::webserver::handle_request (void *c)
 	delete client;
 	delete request;
 	delete response;
+	
+	pthread_exit(NULL);
 	
 	return 0;
 }

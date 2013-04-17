@@ -25,6 +25,7 @@ namespace net
 			clientsocket(int,struct sockaddr_in);
 			~clientsocket();
 			
+			bool valid();
 			std::string recieve();
 			int send(http::response*);
 			int send (std::string);

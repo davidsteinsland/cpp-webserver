@@ -20,6 +20,11 @@ net::clientsocket::~clientsocket()
 	close();
 }
 
+bool net::clientsocket::valid()
+{
+	return socket != -1;
+}
+
 std::string net::clientsocket::recieve()
 {
 	char requestBuffer[DEFAULT_BUFFER_SIZE];
