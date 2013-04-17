@@ -1,6 +1,6 @@
 
 all:
-	g++ -Wall -g -iquote $(CURDIR) http/*.cpp net/unix/*.cpp utils/*.cpp webserver/*.cpp webserver/unix/*.cpp app.cpp -ldl -o solhttpd 2>make.log
+	g++ -Wall -g -iquote $(CURDIR) -pthread http/*.cpp net/unix/*.cpp utils/*.cpp webserver/*.cpp webserver/unix/*.cpp app.cpp -ldl -o solhttpd 2>make.log
 	
 	@echo "See make.log for output."
 

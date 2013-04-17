@@ -23,6 +23,8 @@ static void WINCDECL signal_handler(int sig_num)
 	
 	ws->shutdown();
 	delete ws;
+	
+	std::cout << "Shutting down ..." << std::endl;
 }
 
 int main()
@@ -38,6 +40,6 @@ int main()
 		std::cout << "Error: " << std::endl;
 		std::cout << strerror (error) << std::endl;
 	}
-	
-	std::cout << "Shutting down ..." << std::endl;
+
+	return 0;
 }

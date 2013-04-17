@@ -16,7 +16,9 @@ namespace webserver
 			net::socket* listenSocket;
 			int port;
 			bool started;
-		
+			
+			void *handle_request(void*);
+			
 		public:
 			webserver(int);
 			~webserver();
