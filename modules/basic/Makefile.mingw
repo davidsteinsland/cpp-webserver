@@ -1,6 +1,6 @@
 
 all:
-	g++ -c basic_win32.cpp -o basic.o
+	g++ -c basic_win32.cpp -I ../../ -o basic.o
 	g++ -shared -g -o ../basic.dll \
     -Wl,--export-all-symbols \
     -Wl,--enable-auto-import \

@@ -2,9 +2,9 @@
  * Dynamic Page module for Windows
  */
  
-#include "../../http/request.h"
-#include "../../http/response.h"
-#include "../../utils/stringutils.h"
+#include "http/request.h"
+#include "http/response.h"
+#include "utils/stringutils.h"
 
 #include <windows.h>
 #include <string>

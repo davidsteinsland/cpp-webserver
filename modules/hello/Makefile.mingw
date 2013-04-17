@@ -1,6 +1,6 @@
 
 all:
-	g++ -c hello_win32.cpp -o hello.o
+	g++ -c hello_win32.cpp -I ../../ -o hello.o
 	g++ -shared -g -o ../hello.dll \
     -Wl,--export-all-symbols \
     -Wl,--enable-auto-import \
