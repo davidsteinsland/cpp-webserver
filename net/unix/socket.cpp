@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <cstring> /* memset */
 #include <cerrno>
+#include <unistd.h>
 
 net::socket::~socket()
 {

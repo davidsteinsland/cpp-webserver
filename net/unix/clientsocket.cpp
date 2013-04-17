@@ -7,6 +7,7 @@
 #include <string>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 #define DEFAULT_BUFFER_SIZE 512
 
