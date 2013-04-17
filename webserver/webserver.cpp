@@ -70,7 +70,7 @@ int webserver::webserver::listen ()
 
 		// when we get here, the queue has space
 		pthread_t pid;
-		pthread_create(&pid, NULL, (void* (*)(void*))(&webserver::webserver::handle_request), client);
+		pthread_create(&pid, NULL, handle_request, client);
 		workers.push_back(pid);
 		
 		// make sure we wake a sleeping consumer
@@ -83,7 +83,7 @@ int webserver::webserver::listen ()
 	return 0;
 }
 
-void *webserver::webserver::handle_request (void *c)
+void *webserver::handle_request (void *c)
 {
 	pthread_mutex_lock(&mutex);
 
