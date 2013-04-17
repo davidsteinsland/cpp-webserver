@@ -1,7 +1,7 @@
 #ifndef STRINGUTILS_CPP
 #define STRINGUTILS_CPP
 
-#include "stringutils.h"
+#include "utils/stringutils.h"
 
 #include <cstdio>
 #include <string>

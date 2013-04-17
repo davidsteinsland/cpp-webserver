@@ -5,9 +5,9 @@
 #include <iostream>
 #include <stdio.h>
 #include <map>
-#include "../socket.h"
-#include "../clientsocket.h"
-#include "../../http/request.h"
+#include "net/socket.h"
+#include "net/clientsocket.h"
+#include "http/request.h"
 
 net::socket::~socket()
 {

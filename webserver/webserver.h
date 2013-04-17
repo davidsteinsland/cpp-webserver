@@ -4,9 +4,9 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H 
 
-#include "../net/socket.h"
-#include "../http/response.h"
-#include "../http/request.h"
+#include "net/socket.h"
+#include "http/response.h"
+#include "http/request.h"
  
 namespace webserver
 {

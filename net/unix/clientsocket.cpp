@@ -1,8 +1,8 @@
 #ifndef CLIENT_SOCKET_CPP
 #define CLIENT_SOCKET_CPP 
 
-#include "../clientsocket.h"
-#include "../../http/response.h"
+#include "net/clientsocket.h"
+#include "http/response.h"
 #include <map>
 #include <string>
 #include <sys/socket.h>

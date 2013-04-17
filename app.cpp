@@ -8,6 +8,10 @@
 #include <cstring> /* strerror() */
 #endif
 
+#ifdef _strerror
+#def strerror(X) _strerror(X)
+#endif
+
 using namespace std;
 
 int main()
@@ -17,11 +21,7 @@ int main()
 	if ( (error = ws->listen()) != 0)
 	{
 		cout << "Error: " << endl;
-		#ifdef _WIN32
-		cout << _strerror(error) << endl;
-		#else
 		cout << strerror (error) << endl;
-		#endif
 	}
 	
 	delete ws;

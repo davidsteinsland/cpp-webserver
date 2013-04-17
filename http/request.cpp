@@ -1,8 +1,8 @@
 #ifndef REQUEST_CPP
 #define REQUEST_CPP
 
-#include "request.h"
-#include "../utils/ioutils.h"
+#include "http/request.h"
+#include "utils/ioutils.h"
 
 #include <string>
 #include <map>

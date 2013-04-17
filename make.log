@@ -1,0 +1,6 @@
+net/unix/clientsocket.cpp:8:24: fatal error: sys/socket.h: No such file or directory
+compilation terminated.
+net/unix/socket.cpp:6:24: fatal error: sys/socket.h: No such file or directory
+compilation terminated.
+webserver/unix/module.cpp:6:19: fatal error: dlfcn.h: No such file or directory
+compilation terminated.

@@ -1,8 +1,8 @@
 #ifndef SOCKET_CPP
 #define SOCKET_CPP 
 
-#include "../socket.h"
-#include "../clientsocket.h"
+#include "net/socket.h"
+#include "net/clientsocket.h"
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <cstring> /* memset */

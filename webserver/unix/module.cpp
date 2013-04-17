@@ -1,7 +1,7 @@
 #ifndef MODUL_CPP
 #define MODULE_CPP
 
-#include "../module.h"
+#include "webserver/module.h"
 #include <cstddef>
 #include <dlfcn.h>
 

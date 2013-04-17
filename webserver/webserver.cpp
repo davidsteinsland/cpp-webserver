@@ -1,16 +1,14 @@
 #ifndef WEBSERVER_CPP
 #define WEBSERVER_CPP 
 
-#include "webserver.h"
-#include "../config.h"
-#include "../net/socket.h"
-#include "../http/response.h"
-#include "../http/request.h"
-#include "../utils/fileutils.h"
-
-#include "../net/socket.h"
-#include "../net/clientsocket.h"
-#include "module.h"
+#include "config.h"
+#include "webserver/webserver.h"
+#include "webserver/module.h"
+#include "http/response.h"
+#include "http/request.h"
+#include "net/socket.h"
+#include "net/clientsocket.h"
+#include "utils/fileutils.h"
 
 #include <string>
 #include <iostream>

@@ -4,7 +4,7 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 
-#include "clientsocket.h"
+#include "net/clientsocket.h"
 
 namespace net
 {

@@ -1,10 +1,11 @@
+PWD = ` pwd `
 
 all:
-	g++ -Wall -g http/*.cpp net/win32/*.cpp utils/*.cpp webserver/*.cpp webserver/win32/*.cpp app.cpp -lwsock32 -o webserver 2>make.log
+	g++ -Wall -g -iquote $(CURDIR) http/*.cpp net/win32/*.cpp utils/*.cpp webserver/*.cpp webserver/win32/*.cpp app.cpp -lwsock32 -o solhttpd 2>make.log
 	@echo "See make.log for output."
 
 lib:
-	g++ -c http/request.cpp http/response.cpp utils/ioutils.cpp utils/stringutils.cpp
+	g++ -c -iquote $(CURDIR) http/request.cpp http/response.cpp utils/ioutils.cpp utils/stringutils.cpp
 	ar -rv modules/libsol.a request.o response.o ioutils.o stringutils.o
 	rm request.o response.o ioutils.o stringutils.o
 

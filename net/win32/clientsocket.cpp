@@ -2,8 +2,8 @@
 #define CLIENT_SOCKET_CPP 
 
 #include <winsock2.h>
-#include "../clientsocket.h"
-#include "../../http/response.h"
+#include "net/clientsocket.h"
+#include "http/response.h"
 #include <iostream>
 #include <string>
 #include <map>
