@@ -47,6 +47,8 @@ int net::socket::listen(int port)
 		close();
 		return errno;
 	}
+	
+	listening = true;
 
 	return 0;
 }
