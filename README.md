@@ -54,14 +54,20 @@ Moduler som skal brukes av serveren må finnes i `modules/`-mappen, og ha en `.d
 
 Windows-moduler bruker `libsol.a`, mens UNIX-moduler bruker `libsol-linux.a`. Makefilene er også litt forskjellige, samt mindre C++-spesifikke forskjeller. Sjekk eksempel-mappene `basic` og `hello` for eksempler.
 
+Hvis du har en modul som heter "page.so", så vil denne kunne nås via URL-en: `http://example.com/page`
+
 ## Kjøring
 
 ```bash
-./webserver
+./solhttpd
 ```
 
 På noen servere kommer det noen `Permission denied`-feilmeldinger, og da må programmet kjøres som root:
 
 ```bash
-sudo ./webserver
+sudo ./solhttpd
 ```
+
+## TODO
+
+* Implementere FastCGI med støtte for PHP, Python, o.l.  
