@@ -18,9 +18,13 @@
 #include <pthread.h>
 #include <unistd.h>
 
-std::deque<pthread_t> workers;
+// queue of requests; to be picked up by the worker threads
+std::deque<net::clientsocket*> requests_queue;
+
 pthread_cond_t condition;
 pthread_mutex_t mutex;
+// the pids of the worker threads
+pthread_t worker_pids[config::NUM_WORKER_THREADS];
 
 webserver::webserver::webserver(int p)
 {
@@ -51,72 +55,54 @@ int webserver::webserver::listen ()
 	}
 	
 	started = true;
+		
+	// starting worker threads
+	for (unsigned int i = 0; i < config::NUM_WORKER_THREADS; i++)
+	{
+		pthread_create(&worker_pids[i], NULL, worker_thread, &i);
+	}
 	
 	while (started)
 	{
 		net::clientsocket* client = listenSocket->accept();
 		
-		if ( client == NULL )
+		if ( client == NULL || ! client->valid() )
 		{
 			delete client;
 			continue;
 		}
 		
 		pthread_mutex_lock(&mutex);
-
-		// queue is full, so wait for consumer
-		while (workers.size() == config::NUM_WORKER_THREADS)
-		{
-			std::cout << "All worker threads are busy" << std::endl;
-			pthread_cond_wait(&condition, &mutex);
-		}
-
-		// when we get here, the queue has space
-		pthread_t pid;
-		pthread_create(&pid, NULL, worker_thread, client);
-		workers.push_back(pid);
 		
-		// make sure we wake a sleeping consumer
-		if (workers.size() == 1)
-			pthread_cond_signal(&condition);
-
+		requests_queue.push_back(client);
+		
+		pthread_cond_signal(&condition);
 		pthread_mutex_unlock(&mutex);
 	}
 	
 	return 0;
 }
 
-void *webserver::worker_thread (void *c)
+void *webserver::worker_thread (void *a)
 {
-	pthread_mutex_lock(&mutex);
+	int worker_id = *((int*)a);
 
-	// wait for something to do
-	while (workers.size() == 0)
-		pthread_cond_wait(&condition, &mutex);
-
-	// if we get here, we have some work
-	workers.front();
-	net::clientsocket* client = (net::clientsocket*) c;
-	
-	if (client == NULL || !client->valid())
+	while (true)
 	{
-		if (client)
-			delete client;
-		return 0;
-	}
-	
-	// handle the request
-	handle_request(client);
-	
-	/**
-	 * remove thread from list of active threads
-	 */
-	// make sure we wake a sleeping producer
-	if (workers.size() == 1)
-		pthread_cond_signal(&condition);
+		// wait for something to do
+		pthread_mutex_lock(&mutex);
+		while (requests_queue.size() == 0)
+			pthread_cond_wait(&condition, &mutex);
 
-	workers.pop_front();
-	pthread_mutex_unlock(&mutex);
+		// if we get here, we have some work
+		net::clientsocket* client = requests_queue.front();
+		requests_queue.pop_front();
+		// unlock mutex so other worker threads may access the queue
+		pthread_mutex_unlock(&mutex);
+		
+		// handle the request
+		handle_request(client);
+	}
 	
 	pthread_exit(NULL);
 	
@@ -142,18 +128,25 @@ void webserver::handle_request (net::clientsocket* client)
 		response->set_status(400);
 		response->set_body ("Invalid Request");
 	}
-	else if (request->method() != "POST" && request->method() != "GET")
+	if (request->method() != "POST" && request->method() != "GET")
 	{
 		response->set_status(501);
 		response->set_body ("Method Not Implemented: This server support POST and GET only.");
 	}
 	else if ( utils::fileutils::is_file (config::MODULES_ROOT + request->file() + config::MODULE_EXT))
 	{
-		load_module (request, response);
+		if (! load_module (request, response))
+		{
+			response->set_status(500);
+			response->set_body ("Could not load or call the requested module");
+		}
 	}
-	else
+	else if ( ! load_file (request, response))
 	{
-		load_file (request, response);
+		// In case 301.html or 404.html does not exist, we'd have to return a generic error
+		response->set_content_type("");
+		response->set_status(404);
+		response->set_body ("The requested path is not found");
 	}
 	
 	/**
@@ -167,10 +160,10 @@ void webserver::handle_request (net::clientsocket* client)
 	delete response;
 }
 
-void webserver::load_module (http::request* request, http::response* response)
+bool webserver::load_module (http::request* request, http::response* response)
 {
 	std::string filename = config::MODULES_ROOT + request->file() + config::MODULE_EXT;
-		
+	
 	/**
 	 * dynamic request; file requested path is a file, but has no extension (executable program).
 	 * Contact program with the method:
@@ -195,12 +188,13 @@ void webserver::load_module (http::request* request, http::response* response)
 	}
 	catch (char const* c)
 	{
-		response->set_status(500);
-		response->set_body ("Could not load or call the requested module");
+		return false;
 	}
+	
+	return true;
 }
 
-void webserver::load_file (http::request* request, http::response* response)
+bool webserver::load_file (http::request* request, http::response* response)
 {
 	std::string filename = config::HTML_ROOT + request->file();
 		
@@ -221,7 +215,7 @@ void webserver::load_file (http::request* request, http::response* response)
 			response->set_status(302);
 			response->set_header ("Location", request->url() + request->uri() + "/");
 			
-			return;
+			return true;
 		}
 		
 		if ( utils::fileutils::is_file (filename + "index.html") )
@@ -259,11 +253,10 @@ void webserver::load_file (http::request* request, http::response* response)
 	}
 	catch (...)
 	{
-		// In case 301.html or 404.html does not exist, we'd have to return a generic error
-		response->set_content_type("");
-		response->set_status(404);
-		response->set_body ("The requested path is not found");
+		return false;
 	}
+	
+	return true;
 }
 
 #endif

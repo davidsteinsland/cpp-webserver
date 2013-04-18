@@ -1,6 +1,5 @@
-#include <iostream>
-#include "webserver/webserver.h"
 #include "config.h"
+#include "webserver/webserver.h"
 
 #ifdef _WIN32
 	#include <string.h> /* _strerror() */
@@ -12,10 +11,11 @@
 	#include <cstring> /* strerror() */
 #endif
 
-#include <signal.h>
+#include <iostream>
+#include <csignal>
 
 webserver::webserver* ws;
-int exit_flag;
+static int exit_flag;
 
 static void WINCDECL signal_handler(int sig_num)
 {

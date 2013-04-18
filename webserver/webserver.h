@@ -12,9 +12,10 @@
 namespace webserver
 {
 	void* worker_thread(void*);
+	
 	void handle_request(net::clientsocket*);
-	void load_module (http::request*,http::response*);
-	void load_file (http::request*, http::response*);
+	bool load_module (http::request*,http::response*);
+	bool load_file (http::request*, http::response*);
 	
 	class webserver
 	{
