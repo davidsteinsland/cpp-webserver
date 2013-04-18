@@ -5,12 +5,16 @@
 #define WEBSERVER_H 
 
 #include "net/socket.h"
+#include "net/clientsocket.h"
 #include "http/response.h"
 #include "http/request.h"
  
 namespace webserver
 {
-	void* handle_request(void*);
+	void* worker_thread(void*);
+	void handle_request(net::clientsocket*);
+	void load_module (http::request*,http::response*);
+	void load_file (http::request*, http::response*);
 	
 	class webserver
 	{
