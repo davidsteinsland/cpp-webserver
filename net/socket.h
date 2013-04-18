@@ -7,6 +7,7 @@
 #ifdef _WIN32
 	#include <winsock.h>
 	#define ERRNO GetLastError()
+	typedef int socklen_t;
 #else
 	#include <sys/socket.h>
 	#include <sys/types.h>
@@ -101,7 +102,7 @@ namespace net
 			clientsocket* accept()
 			{
 				struct sockaddr_in from;
-				int l = sizeof (from);
+				socklen_t l = sizeof (from);
 				int clientfd = ::accept (socket, (struct sockaddr*)&from, &l);
 				
 				clientsocket* clientSocket = new clientsocket(clientfd, from);

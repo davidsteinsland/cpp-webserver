@@ -8,7 +8,10 @@
 	#include <winsock2.h>
 	#define ERRNO GetLastError()
 #else
+	#include <cerrno>
 	#define ERRNO errno
+	#define INVALID_SOCKET (-1)
+	#define SOCKET_ERROR (-1)
 	#include <netinet/in.h>
 	#include <sys/socket.h>
 	#include <sys/types.h>
