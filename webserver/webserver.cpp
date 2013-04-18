@@ -213,10 +213,17 @@ void webserver::load_file (http::request* request, http::response* response)
 	}
 	else if ( utils::fileutils::is_directory (filename))
 	{
-		// add forward slash if missing
+		/**
+		 * Send a 301 Header if request points to a directory, but the URI doesn't ends with a forward slash, /.
+		 */
 		if ( *filename.rbegin() != '/' )
-			filename.append("/");
-
+		{
+			response->set_status(302);
+			response->set_header ("Location", request->url() + request->uri() + "/");
+			
+			return;
+		}
+		
 		if ( utils::fileutils::is_file (filename + "index.html") )
 		{
 			filename = filename + "index.html";
