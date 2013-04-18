@@ -66,7 +66,10 @@ int webserver::webserver::listen ()
 
 		// queue is full, so wait for consumer
 		while (workers.size() == config::NUM_WORKER_THREADS)
+		{
+			std::cout << "All worker threads are busy" << std::endl;
 			pthread_cond_wait(&condition, &mutex);
+		}
 
 		// when we get here, the queue has space
 		pthread_t pid;
@@ -101,13 +104,6 @@ void *webserver::handle_request (void *c)
 			delete client;
 		return 0;
 	}
-	
-	// make sure we wake a sleeping producer
-	if (workers.size() == 1)
-		pthread_cond_signal(&condition);
-
-	workers.pop_front();
-	pthread_mutex_unlock(&mutex);
 	
 	// handle the request
 	http::request* request = http::request::parse(client->recieve());
@@ -227,6 +223,16 @@ void *webserver::handle_request (void *c)
 	delete client;
 	delete request;
 	delete response;
+	
+	/**
+	 * remove thread from list of active threads
+	 */
+	// make sure we wake a sleeping producer
+	if (workers.size() == 1)
+		pthread_cond_signal(&condition);
+
+	workers.pop_front();
+	pthread_mutex_unlock(&mutex);
 	
 	pthread_exit(NULL);
 	
