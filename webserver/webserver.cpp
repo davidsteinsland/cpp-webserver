@@ -128,7 +128,7 @@ void webserver::handle_request (net::clientsocket* client)
 		response->set_status(400);
 		response->set_body ("Invalid Request");
 	}
-	if (request->method() != "POST" && request->method() != "GET")
+	else if (request->method() != "POST" && request->method() != "GET")
 	{
 		response->set_status(501);
 		response->set_body ("Method Not Implemented: This server support POST and GET only.");
@@ -141,12 +141,15 @@ void webserver::handle_request (net::clientsocket* client)
 			response->set_body ("Could not load or call the requested module");
 		}
 	}
-	else if ( ! load_file (request, response))
+	else
 	{
-		// In case 301.html or 404.html does not exist, we'd have to return a generic error
-		response->set_content_type("");
-		response->set_status(404);
-		response->set_body ("The requested path is not found");
+		if ( ! load_file (request, response))
+		{
+			// In case 301.html or 404.html does not exist, we'd have to return a generic error
+			response->set_content_type("");
+			response->set_status(404);
+			response->set_body ("The requested path is not found");
+		}
 	}
 	
 	/**
