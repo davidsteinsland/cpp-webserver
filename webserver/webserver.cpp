@@ -136,11 +136,16 @@ void webserver::handle_request (net::clientsocket* client)
 	 * 2.1 301 page if directory exist, but no index.html
 	 * 3. 404 page
 	 */
-	if (request == NULL || (request->method() != "POST" && request->method() != "GET"))
+	if (request == NULL)
 	{
 		// invalid request; 400 Bad Request
 		response->set_status(400);
 		response->set_body ("Invalid Request");
+	}
+	else if (request->method() != "POST" && request->method() != "GET")
+	{
+		response->set_status(501);
+		response->set_body ("Method Not Implemented: This server support POST and GET only.");
 	}
 	else if ( utils::fileutils::is_file (config::MODULES_ROOT + request->file() + config::MODULE_EXT))
 	{
