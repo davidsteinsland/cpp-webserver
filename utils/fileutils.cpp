@@ -68,6 +68,9 @@ std::string utils::fileutils::content_type (std::string key, std::string def)
 
 bool utils::fileutils::is_file (std::string filename)
 {
+	if (is_directory (filename))
+		return false;
+
 	std::ifstream in(filename.c_str(), std::ios::in | std::ios::binary);
 	if (in)
 	{
