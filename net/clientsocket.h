@@ -48,23 +48,16 @@ namespace net
 			bool valid();
 			void close();
 			
-			std::string recieve()
+			int recieve(char* buf, int len)
 			{
-				char requestBuffer[DEFAULT_BUFFER_SIZE];
-
-				int k = ::recv(socket, requestBuffer, DEFAULT_BUFFER_SIZE, 0);
+				int k = ::recv(socket, buf, len, 0);
 				
-				if ( k == 0 )
-				{
-					std::cout << "Connection closed" << std::endl;
-				}
-				else if (k == SOCKET_ERROR)
+				if (k == SOCKET_ERROR)
 				{
 					std::cout << "recv failed: " << ERRNO << std::endl;
-					close();
 				}
 				
-				return std::string(requestBuffer, 0, k);
+				return k;
 			}
 			
 			int send(http::response* res)

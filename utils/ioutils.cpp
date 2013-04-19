@@ -7,6 +7,7 @@
 
 std::stringstream& utils::ioutils::getline (std::stringstream &ss, std::string &line)
 {
+	line = std::string();
 	std::getline(ss, line, '\n');
 	
 	if (line[line.size() - 1] == '\r')

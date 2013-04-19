@@ -36,6 +36,10 @@ namespace net
 			}
 			
 			void close();
+			bool active()
+			{
+				return listening;
+			}
 			
 			int listen(int port)
 			{

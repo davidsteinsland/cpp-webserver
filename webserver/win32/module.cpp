@@ -21,7 +21,7 @@ webserver::module::~module()
 
 void* webserver::module::call(const char* libName)
 {
-	FARPROC initializer = GetProcAddress((HMODULE)this->library, "handle_request");
+	FARPROC initializer = GetProcAddress((HMODULE)this->library, libName);
 	
 	if (initializer == NULL)
 	{

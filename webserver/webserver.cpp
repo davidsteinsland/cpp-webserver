@@ -62,7 +62,7 @@ int webserver::webserver::listen ()
 		pthread_create(&worker_pids[i], NULL, worker_thread, &i);
 	}
 	
-	while (started)
+	while (listenSocket->active())
 	{
 		net::clientsocket* client = listenSocket->accept();
 		
@@ -111,8 +111,20 @@ void *webserver::worker_thread (void *a)
 
 void webserver::handle_request (net::clientsocket* client)
 {
-	http::request* request = http::request::parse(client->recieve());
+	char *buf = new char[512];
+	int k = client->recieve(buf, 512);
+	
+	if ( k <= 0 )
+	{
+		delete client;
+		delete [] buf;
+		return;
+	}
+	
+	http::request* request = http::request::parse(std::string(buf, 0, k));
 	http::response* response = new http::response (200, "text/plain");
+	
+	delete [] buf;
 	
 	/**
 	 * Try to load the following files, in prioritized order:

@@ -11,7 +11,8 @@ bool net::clientsocket::valid()
 
 void net::clientsocket::close()
 {
-	::close(socket);
+	if (socket > -1)
+		::close(socket);
 }
 
 #endif

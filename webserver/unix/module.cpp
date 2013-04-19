@@ -21,7 +21,7 @@ webserver::module::~module()
 
 void* webserver::module::call(const char* method)
 {
-	void* initializer = dlsym(library, "handle_request");
+	void* initializer = dlsym(library, method);
 	if (initializer == NULL)
 	{
 	   throw ("Could not call method");

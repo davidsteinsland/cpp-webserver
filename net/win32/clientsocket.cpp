@@ -11,7 +11,8 @@ bool net::clientsocket::valid()
 
 void net::clientsocket::close()
 {
-	closesocket(socket);
+	if ((SOCKET)socket != INVALID_SOCKET
+		closesocket(socket);
 }
 
 #endif
