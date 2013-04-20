@@ -1,6 +1,6 @@
 
 all:
-	g++ -Wall -g -iquote $(CURDIR) -pthread http/*.cpp net/win32/*.cpp utils/*.cpp webserver/*.cpp webserver/win32/*.cpp app.cpp -lwsock32 -o solhttpd 2>make.log
+	g++ -Wall -g -iquote $(CURDIR) http/*.cpp net/*.cpp utils/*.cpp webserver/*.cpp app.cpp -pthread -lwsock32 -o solhttpd 2>make.log
 	@echo "See make.log for output."
 
 lib:

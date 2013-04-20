@@ -6,23 +6,17 @@
 
 #ifdef _WIN32
 	#include <winsock2.h>
-	#define ERRNO GetLastError()
 #else
-	#include <cerrno>
-	#define ERRNO errno
-	#define INVALID_SOCKET (-1)
-	#define SOCKET_ERROR (-1)
 	#include <netinet/in.h>
 	#include <sys/socket.h>
 	#include <sys/types.h>
+	#include <unistd.h>
 #endif
 
+#include "net/socket_types.h"
 #include "http/response.h"
 
 #include <string>
-#include <iostream>
-#include <string>
-#include <map>
 
 #define DEFAULT_BUFFER_SIZE 512
 
@@ -31,56 +25,23 @@ namespace net
 	class clientsocket
 	{
 		private:
-			int socket;
+			SOCKET socket;
 			struct sockaddr_in address;
 			
 		public:
-			clientsocket(int s,struct sockaddr_in addr) : socket(s), address(addr)
+			clientsocket(SOCKET s,struct sockaddr_in addr) : socket(s), address(addr)
 			{
 			
 			}
 			
-			~clientsocket()
-			{
-				close();
-			}
+			~clientsocket();
 			
-			bool valid();
 			void close();
-			
-			int recieve(char* buf, int len)
-			{
-				int k = ::recv(socket, buf, len, 0);
-				
-				if (k == SOCKET_ERROR)
-				{
-					std::cout << "recv failed: " << ERRNO << std::endl;
-				}
-				
-				return k;
-			}
-			
-			int send(http::response* res)
-			{
-				std::string headersString = res->status_line();
-				std::map<std::string,std::string> headers = res->headers();
-				
-				for (std::map<std::string,std::string>::iterator it = headers.begin(); it != headers.end(); ++it)
-					headersString.append (it->first + ": " + it->second + "\r\n");
-				headersString.append("\r\n");
-				
-				return send (headersString + res->body());
-			}
-			
-			int send (std::string data)
-			{
-				return send (data.c_str(), data.length(), 0);
-			}
-			
-			int send(const char* buf,int len,int flags)
-			{
-				return ::send (socket, buf, len, flags);
-			}
+			bool valid();
+			int recieve(char*,int);
+			int send(http::response*);
+			int send (std::string);
+			int send(const char*,int,int);
 	};
 };
 
