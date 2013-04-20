@@ -15,8 +15,72 @@
 
 #include <queue>
 #include <deque>
-#include <pthread.h>
 #include <unistd.h>
+
+#ifdef _WIN32
+	#include <process.h>
+	
+	typedef HANDLE pthread_mutex_t;
+	typedef struct {HANDLE signal, broadcast;} pthread_cond_t;
+	typedef DWORD pthread_t;
+	#define pid_t HANDLE // MINGW typedefs pid_t to int. Using #define here.
+	
+	typedef struct {
+		int __detachstate;
+		int __schedpolicy;
+		int __inheritsched;
+		int __scope;
+		size_t __guardsize;
+		int __stackaddr_set;
+		void *__stackaddr;
+		unsigned long int __stacksize;
+	} pthread_attr_t;
+	
+	int pthread_mutex_init(pthread_mutex_t *mutex, void *unused)
+	{
+		(void) unused;
+		*mutex = CreateMutex(NULL, FALSE, NULL);
+		return *mutex == NULL ? -1 : 0;
+	}
+	
+	int pthread_mutex_lock(pthread_mutex_t *mutex)
+	{
+		return WaitForSingleObject(*mutex, INFINITE) == WAIT_OBJECT_0? 0 : -1;
+	}
+	
+	int pthread_mutex_unlock(pthread_mutex_t *mutex)
+	{
+		return ReleaseMutex(*mutex) == 0 ? -1 : 0;
+	}
+	
+	int pthread_cond_init(pthread_cond_t *cv, const void *unused)
+	{
+		(void) unused;
+		cv->signal = CreateEvent(NULL, FALSE, FALSE, NULL);
+		cv->broadcast = CreateEvent(NULL, TRUE, FALSE, NULL);
+		return cv->signal != NULL && cv->broadcast != NULL ? 0 : -1;
+	}
+	
+	int pthread_cond_wait(pthread_cond_t *cv, pthread_mutex_t *mutex)
+	{
+		HANDLE handles[] = {cv->signal, cv->broadcast};
+		ReleaseMutex(*mutex);
+		WaitForMultipleObjects(2, handles, FALSE, INFINITE);
+		return WaitForSingleObject(*mutex, INFINITE) == WAIT_OBJECT_0? 0 : -1;
+	}
+
+	int pthread_cond_signal(pthread_cond_t *cv)
+	{
+		return SetEvent(cv->signal) == 0 ? -1 : 0;
+	}
+	
+	int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg)
+	{
+		return (long)_beginthread((void (__cdecl *)(void *))start_routine, 0, arg) == -1L ? -1 : 0;
+	}
+#else
+	#include <pthread.h>
+#endif
 
 // queue of requests; to be picked up by the worker threads
 std::deque<net::clientsocket*> requests_queue;
@@ -103,8 +167,6 @@ void *webserver::worker_thread (void *a)
 		// handle the request
 		handle_request(client);
 	}
-	
-	pthread_exit(NULL);
 	
 	return 0;
 }
