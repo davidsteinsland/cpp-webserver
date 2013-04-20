@@ -1,6 +1,7 @@
 #ifndef WEBSERVER_CPP
 #define WEBSERVER_CPP 
 
+
 #include "config.h"
 #include "webserver/webserver.h"
 #include "webserver/module.h"
@@ -17,92 +18,19 @@
 #include <deque>
 #include <unistd.h>
 
-#ifdef _WIN32
-	#include <process.h>
-	
-	typedef HANDLE pthread_mutex_t;
-	typedef struct {HANDLE signal, broadcast;} pthread_cond_t;
-	typedef DWORD pthread_t;
-	#define pid_t HANDLE // MINGW typedefs pid_t to int. Using #define here.
-	
-	typedef struct {
-		int __detachstate;
-		int __schedpolicy;
-		int __inheritsched;
-		int __scope;
-		size_t __guardsize;
-		int __stackaddr_set;
-		void *__stackaddr;
-		unsigned long int __stacksize;
-	} pthread_attr_t;
-	
-	int pthread_mutex_init(pthread_mutex_t *mutex, void *unused)
-	{
-		(void) unused;
-		*mutex = CreateMutex(NULL, FALSE, NULL);
-		return *mutex == NULL ? -1 : 0;
-	}
-	
-	int pthread_mutex_lock(pthread_mutex_t *mutex)
-	{
-		return WaitForSingleObject(*mutex, INFINITE) == WAIT_OBJECT_0? 0 : -1;
-	}
-	
-	int pthread_mutex_unlock(pthread_mutex_t *mutex)
-	{
-		return ReleaseMutex(*mutex) == 0 ? -1 : 0;
-	}
-	
-	int pthread_cond_init(pthread_cond_t *cv, const void *unused)
-	{
-		(void) unused;
-		cv->signal = CreateEvent(NULL, FALSE, FALSE, NULL);
-		cv->broadcast = CreateEvent(NULL, TRUE, FALSE, NULL);
-		return cv->signal != NULL && cv->broadcast != NULL ? 0 : -1;
-	}
-	
-	int pthread_cond_wait(pthread_cond_t *cv, pthread_mutex_t *mutex)
-	{
-		HANDLE handles[] = {cv->signal, cv->broadcast};
-		ReleaseMutex(*mutex);
-		WaitForMultipleObjects(2, handles, FALSE, INFINITE);
-		return WaitForSingleObject(*mutex, INFINITE) == WAIT_OBJECT_0? 0 : -1;
-	}
-
-	int pthread_cond_signal(pthread_cond_t *cv)
-	{
-		return SetEvent(cv->signal) == 0 ? -1 : 0;
-	}
-	
-	int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg)
-	{
-		return (long)_beginthread((void (__cdecl *)(void *))start_routine, 0, arg) == -1L ? -1 : 0;
-	}
-#else
-	#include <pthread.h>
-#endif
-
-// queue of requests; to be picked up by the worker threads
-std::deque<net::clientsocket*> requests_queue;
-
-pthread_cond_t condition;
-pthread_mutex_t mutex;
-// the pids of the worker threads
-pthread_t worker_pids[config::NUM_WORKER_THREADS];
-
 webserver::webserver::webserver(int p)
 {
 	port = p;
 	listenSocket = new net::socket();
 	
-	pthread_cond_init(&condition, 0);
-	pthread_mutex_init(&mutex, 0);
+	thread_pool = new worker_pool<net::clientsocket*> (config::NUM_WORKER_THREADS);
 }
 
 webserver::webserver::~webserver()
 {
 	listenSocket->close();
 	delete listenSocket;
+	delete thread_pool;
 }
 
 void webserver::webserver::shutdown()
@@ -121,10 +49,7 @@ int webserver::webserver::listen ()
 	started = true;
 		
 	// starting worker threads
-	for (unsigned int i = 0; i < config::NUM_WORKER_THREADS; i++)
-	{
-		pthread_create(&worker_pids[i], NULL, worker_thread, &i);
-	}
+	thread_pool->start_workers(worker_thread);
 	
 	while (listenSocket->active())
 	{
@@ -136,33 +61,19 @@ int webserver::webserver::listen ()
 			continue;
 		}
 		
-		pthread_mutex_lock(&mutex);
-		
-		requests_queue.push_back(client);
-		
-		pthread_cond_signal(&condition);
-		pthread_mutex_unlock(&mutex);
+		thread_pool->add_job (client);
 	}
 	
 	return 0;
 }
 
-void *webserver::worker_thread (void *a)
+void *webserver::worker_thread (void* arg)
 {
-	int worker_id = *((int*)a);
-
+	worker_pool<net::clientsocket*>* pool = (worker_pool<net::clientsocket*>*)arg;
+	
 	while (true)
 	{
-		// wait for something to do
-		pthread_mutex_lock(&mutex);
-		while (requests_queue.size() == 0)
-			pthread_cond_wait(&condition, &mutex);
-
-		// if we get here, we have some work
-		net::clientsocket* client = requests_queue.front();
-		requests_queue.pop_front();
-		// unlock mutex so other worker threads may access the queue
-		pthread_mutex_unlock(&mutex);
+		net::clientsocket* client = pool->get_job();
 		
 		// handle the request
 		handle_request(client);

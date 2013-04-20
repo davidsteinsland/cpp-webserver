@@ -8,6 +8,7 @@
 #include "net/clientsocket.h"
 #include "http/response.h"
 #include "http/request.h"
+#include "webserver/worker_pool.h"
  
 namespace webserver
 {
@@ -20,6 +21,7 @@ namespace webserver
 	class webserver
 	{
 		private:
+			worker_pool<net::clientsocket*>* thread_pool;
 			net::socket* listenSocket;
 			int port;
 			bool started;
