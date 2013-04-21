@@ -20,6 +20,9 @@ std::map<std::string,std::string> utils::fileutils::mime_types;
 std::string utils::fileutils::contents (std::string filename)
 	throw (int)
 {
+	if (is_directory (filename))
+		throw -1;
+
 	std::ifstream in(filename.c_str(), std::ios::in | std::ios::binary);
 	if (in)
 	{

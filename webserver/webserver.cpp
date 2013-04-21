@@ -12,6 +12,7 @@
 #include "utils/fileutils.h"
 
 #include <string>
+#include <sstream>
 #include <iostream>
 
 #include <queue>
@@ -75,83 +76,155 @@ void *webserver::worker_thread (void* arg)
 	{
 		net::clientsocket* client = pool->get_job();
 		
-		// handle the request
-		handle_request(client);
+		char *buf = new char[512];
+		int k = client->recieve(buf, 512);
+		
+		if ( k <= 0 )
+		{
+			delete client;
+			delete [] buf;
+			
+			std::cerr << "Recieve failed with code #" << ERRNO << std::endl;
+			
+			continue;
+		}
+		
+		http::request* request = http::request::parse(std::string(buf, 0, k));
+		http::response* response = new http::response (200, "text/plain");
+		
+		if (request == NULL)
+		{
+			// invalid request; 400 Bad Request
+			response->set_status(400);
+			response->set_body ("Invalid Request");
+		}
+		
+		if (request->method() != "POST" && request->method() != "GET")
+		{
+			response->set_status(501);
+			response->set_body ("Method Not Implemented: This server support POST and GET only.");
+		}
+		else
+		{
+			// handle the request
+			handle_request(request, response);
+		}
+		
+		if (response->code() != 200)
+		{
+			/**
+			 * 1. Try to load an error file from errors/ folder
+			 * 2. Revert to a generic error if that could not be done
+			 */
+			try
+			{
+				std::stringstream ss;
+				ss << config::ERRORS_ROOT << "/" << response->code() << ".html";
+				
+				response->set_body (utils::fileutils::contents(ss.str()));
+				response->set_content_type ("text/html");
+				
+			}
+			catch (int e)
+			{
+				response->set_content_type("");
+				// could not find the error file;
+				// we have to send the response as is, with no content (that is, if set_body() hasn't been called earlier)
+			}
+		}
+		
+		/**
+		 * write response to client and exit thread
+		 */
+		client->send(response);
+		client->close();
+		
+		delete [] buf;
+		delete request;
+		delete response;
+		delete client;
 	}
 	
 	return 0;
 }
 
-void webserver::handle_request (net::clientsocket* client)
+void webserver::handle_request (http::request* request, http::response* response)
 {
-	char *buf = new char[512];
-	int k = client->recieve(buf, 512);
-	
-	if ( k <= 0 )
-	{
-		delete client;
-		delete [] buf;
-		return;
-	}
-	
-	http::request* request = http::request::parse(std::string(buf, 0, k));
-	http::response* response = new http::response (200, "text/plain");
-	
-	delete [] buf;
-	
 	/**
 	 * Try to load the following files, in prioritized order:
 	 * 1. a module file
-	 * 1. The requested file
-	 * 2. Directory index
-	 * 2.1 301 page if directory exist, but no index.html
-	 * 3. 404 page
+	 * 2. Directory indexes
+	 * 3. The requested file
 	 */
-	if (request == NULL)
+	
+	std::string* filename = new std::string (config::HTML_ROOT);
+	filename->append (request->file());
+	
+	std::string* module = new std::string(config::MODULES_ROOT);
+	module->append (request->file());
+	module->append(config::MODULE_EXT);
+	
+	if ( ! utils::fileutils::is_file (*filename) && ! utils::fileutils::is_directory (*filename) && ! utils::fileutils::is_file (*module))
 	{
-		// invalid request; 400 Bad Request
-		response->set_status(400);
-		response->set_body ("Invalid Request");
+		response->set_status(404);
+		response->set_body ("Could not find the requested path: " + *filename);
+		
+		delete module;
+		delete filename;
+		return;
 	}
-	else if (request->method() != "POST" && request->method() != "GET")
+	
+	if ( utils::fileutils::is_file (*module))
 	{
-		response->set_status(501);
-		response->set_body ("Method Not Implemented: This server support POST and GET only.");
-	}
-	else if ( utils::fileutils::is_file (config::MODULES_ROOT + request->file() + config::MODULE_EXT))
-	{
-		if (! load_module (request, response))
+		if (! load_module (request, response, *module))
 		{
 			response->set_status(500);
-			response->set_body ("Could not load or call the requested module");
+			response->set_body ("Could not load or call the requested module: " + *module);
 		}
+		
+		delete module;
+		delete filename;
+		return;
 	}
-	else
+	
+	delete module;
+	
+	if ( utils::fileutils::is_directory (*filename))
 	{
-		if ( ! load_file (request, response))
+		/**
+		 * Send a 301 Header if request points to a directory, but the URI doesn't ends with a forward slash, /.
+		 */
+		if ( *filename->rbegin() != '/' )
 		{
-			// In case 301.html or 404.html does not exist, we'd have to return a generic error
-			response->set_content_type("");
-			response->set_status(404);
-			response->set_body ("The requested path is not found");
+			response->set_status(302);
+			response->set_header ("Location", request->url() + request->uri() + "/");
+			response->set_body ("Object has moved");
 		}
+		else if ( ! load_file (response, filename->append("index.html")) 
+			   && ! load_file (response, filename->append("index.htm")))
+		{
+			// if we reach this position, an index file could not be loaded although the directory exists;
+			// this means we have to respond with a 301 status.
+			response->set_status(301);
+			response->set_body ("Access Forbidden!");
+		}
+		
+		delete filename;
+		return;
 	}
 	
-	/**
-	 * write response to client and exit thread
-	 */
-	client->send(response);
-	client->close();
-	
-	delete client;
-	delete request;
-	delete response;
+	if (! load_file (response, *filename))
+	{
+		response->set_status(500);
+		response->set_body ("Could not load the file: " + *filename);
+	}
+		
+	delete filename;
+	return;
 }
 
-bool webserver::load_module (http::request* request, http::response* response)
+bool webserver::load_module (http::request* request, http::response* response, std::string filename)
 {
-	std::string filename = config::MODULES_ROOT + request->file() + config::MODULE_EXT;
-	
 	/**
 	 * dynamic request; file requested path is a file, but has no extension (executable program).
 	 * Contact program with the method:
@@ -182,52 +255,18 @@ bool webserver::load_module (http::request* request, http::response* response)
 	return true;
 }
 
-bool webserver::load_file (http::request* request, http::response* response)
+bool webserver::load_file (http::response* response, std::string filename)
 {
-	std::string filename = config::HTML_ROOT + request->file();
-		
-	if ( utils::fileutils::is_file (filename) )
+	if ( ! utils::fileutils::is_file (filename) )
 	{
-		/**	
-		 * filename is a file
-		 * @TODO: Implements File Handlers here
-		 */
-	}
-	else if ( utils::fileutils::is_directory (filename))
-	{
-		/**
-		 * Send a 301 Header if request points to a directory, but the URI doesn't ends with a forward slash, /.
-		 */
-		if ( *filename.rbegin() != '/' )
-		{
-			response->set_status(302);
-			response->set_header ("Location", request->url() + request->uri() + "/");
-			
-			return true;
-		}
-		
-		if ( utils::fileutils::is_file (filename + "index.html") )
-		{
-			filename = filename + "index.html";
-		}
-		else if ( utils::fileutils::is_file (filename + "index.htm") )
-		{
-			filename = filename + "index.htm";
-		}
-		else
-		{
-			filename = config::HTML_ROOT + "/301.html";
-			response->set_status(301);
-		}
-	}
-	else
-	{
-		filename = config::HTML_ROOT + "/404.html";
-		response->set_status(404);
+		return false;
 	}
 	
 	try
 	{
+		// load contents of file
+		response->set_body (utils::fileutils::contents(filename));
+		
 		/**
 		 * Find mime type based on file extension,
 		 * and default to text/plain if no mime can be found
@@ -236,15 +275,12 @@ bool webserver::load_file (http::request* request, http::response* response)
 		if (ext_pos != std::string::npos && ext_pos <= filename.length())
 			response->set_content_type (utils::fileutils::content_type (filename.substr(ext_pos), "text/plain"));
 		
-		// load contents of file
-		response->set_body (utils::fileutils::contents(filename));
+		return true;
 	}
-	catch (...)
+	catch (int e)
 	{
 		return false;
 	}
-	
-	return true;
 }
 
 #endif

@@ -33,14 +33,7 @@ bool net::clientsocket::valid()
 
 int net::clientsocket::recieve(char* buf, int len)
 {
-	int k = ::recv(socket, buf, len, 0);
-				
-	if (k == SOCKET_ERROR)
-	{
-		std::cout << "recv failed: " << ERRNO << std::endl;
-	}
-	
-	return k;
+	return ::recv(socket, buf, len, 0);
 }
 
 int net::clientsocket::send(http::response* res)
