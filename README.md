@@ -96,6 +96,14 @@ cd build/
 sudo ./solhttpd
 ```
 
+**Som Daemon**:
+
+```bash
+build/solhttpd.sh start
+```
+
+init-scriptet **må** ligge i samme mappe som programmet for at det skal fungere ordentlig.
+
 ## TODO
 
 * Implementere FastCGI med støtte for PHP, Python, o.l.

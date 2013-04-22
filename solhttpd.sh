@@ -14,7 +14,7 @@ SCRIPTNAME=$DAEMON_PATH$NAME
 case "$1" in
 start)
 	printf "%-50s" "Starting $NAME..."
-	cd $DAEMON_PATH
+
 	PID=`$DAEMON $DAEMONOPTS > /dev/null 2>&1 & echo $!`
 	#echo "Saving PID" $PID " to " $PIDFILE
 	if [ -z $PID ]; then
