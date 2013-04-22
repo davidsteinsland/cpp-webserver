@@ -5,7 +5,7 @@ all:
 
 lib:
 	g++ -iquote $(CURDIR) -shared -fPIC -c http/request.cpp http/response.cpp utils/ioutils.cpp utils/stringutils.cpp
-	ar -rv modules/libsol-linux.a request.o response.o ioutils.o stringutils.o
+	ar -rv modules/libsol.a request.o response.o ioutils.o stringutils.o
 	rm request.o response.o ioutils.o stringutils.o
 
 modules: lib
