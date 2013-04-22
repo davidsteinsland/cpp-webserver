@@ -11,6 +11,7 @@ test.sh
 tests/
 
 build/
+*.dia
 
 # Logs               #
 ######################

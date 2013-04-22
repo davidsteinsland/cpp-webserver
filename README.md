@@ -17,6 +17,18 @@ Målet er å lage en liten effektiv webserver kryss-kompatibel med Mac, Windows 
 ## Gruppeinformasjon
 David Steinsland, s180486, david@davidsteinsland.net
 
+
+----------
+
+## Features
+
+* Støtte for GET og POST
+* Støtte for statiske filer og dynamiske moduler (linket C++-programmer)
+* Worker-tråder gjennom et worker pool
+* Kryss-kompatibel med Windows/Unix
+* Windows-versjonen benytter seg av `winsock` og Windows-tråder, slik at den kan debugges på Windows også
+* Enkelt og oversiktlig API
+
 ## Bygging
 
 Det finnes én `Makefile` for Windows (MinGW) og én for UNIX-miljøer.
@@ -48,6 +60,20 @@ og
 make modules
 ```
 
+## Installering av web server
+
+**UNIX:**
+
+```bash
+make && make install
+```
+
+**Windows:**
+
+```bash
+mingw32-make -f Makefile.mingw && mingw32-make -f Makefile.mingw install
+```
+
 ## Installering av nye moduler
 
 Moduler som skal brukes av serveren må finnes i `modules/`-mappen, og ha en `.dll`-endelse dersom bruk på Windows og `.so` på UNIX. Merk også at det er litt ulik syntaks mellom en Windows- og Unix-modul:
@@ -59,15 +85,23 @@ Hvis du har en modul som heter "page.so", så vil denne kunne nås via URL-en: `
 ## Kjøring
 
 ```bash
+cd build/
 ./solhttpd
 ```
 
 På noen servere kommer det noen `Permission denied`-feilmeldinger, og da må programmet kjøres som root:
 
 ```bash
+cd build/
 sudo ./solhttpd
 ```
 
 ## TODO
 
-* Implementere FastCGI med støtte for PHP, Python, o.l.  
+* Implementere FastCGI med støtte for PHP, Python, o.l.
+
+
+----------
+
+## Flow-chart
+![](flowchart.png)
