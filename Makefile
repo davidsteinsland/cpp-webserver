@@ -21,3 +21,4 @@ install:
 	cp -r errors/ build/
 	mkdir build/modules/
 	cp -r modules/*.so build/modules/
+	cp solhttpd.sh build/
