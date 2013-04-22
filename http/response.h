@@ -20,12 +20,27 @@ namespace http
 			
 			static void create_status_lines();
 		public:
+			/**
+			 * Creates a response with status and content type
+			 */
 			response (int,std::string);
 			~response();
 			
+			/**
+			 * Sets the http status code
+			 */
 			void set_status(int);
+			/**
+			 * Sets the content type
+			 */
 			void set_content_type(std::string);
+			/**
+			 * Sets a header value
+			 */
 			void set_header (std::string,std::string);
+			/**
+			 * Sets the response body
+			 */
 			void set_body(std::string);
 			
 			std::map<std::string,std::string> headers();

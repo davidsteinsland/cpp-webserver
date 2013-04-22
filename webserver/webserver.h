@@ -6,18 +6,10 @@
 
 #include "net/socket.h"
 #include "net/clientsocket.h"
-#include "http/response.h"
-#include "http/request.h"
 #include "webserver/worker_pool.h"
  
 namespace webserver
 {
-	void* worker_thread(void*);
-	
-	void handle_request(http::request*,http::response*);
-	bool load_module (http::request*,http::response*, std::string);
-	bool load_file (http::response*,std::string);
-	
 	class webserver
 	{
 		private:
