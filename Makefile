@@ -11,3 +11,13 @@ lib:
 modules: lib
 	make -C modules/basic/
 	make -C modules/hello/
+
+install:
+	rm -rf build/
+	mkdir build/
+	cp solhttpd build/
+	cp mimes.list build/
+	cp -r public_html/ build/
+	cp -r errors/ build/
+	mkdir build/modules/
+	cp -r modules/*.so build/modules/

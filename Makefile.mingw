@@ -11,3 +11,13 @@ lib:
 modules: lib
 	mingw32-make -C modules/basic -f Makefile.mingw
 	mingw32-make -C modules/hello -f Makefile.mingw
+
+install:
+	rm -rf build/
+	mkdir build/
+	cp solhttpd.exe build/
+	cp mimes.list build/
+	cp -r public_html/ build/
+	cp -r errors/ build/
+	mkdir build/modules/
+	cp -r modules/*.dll build/modules/

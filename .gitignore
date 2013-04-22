@@ -10,6 +10,8 @@
 test.sh
 tests/
 
+build/
+
 # Logs               #
 ######################
 *.log
