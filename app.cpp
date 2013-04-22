@@ -4,7 +4,7 @@
 #ifdef _WIN32
 	#include <string.h> /* _strerror() */
 	#include <malloc.h> /* _alloca() */
-	#define strerror(x)  _ultoa(x, (char *) _alloca(sizeof(x) *3 ), 10)
+	//#define strerror(x)  _ultoa(x, (char *) _alloca(sizeof(x) *3 ), 10)
 	#define WINCDECL __cdecl
 #else
 	#define WINCDECL
