@@ -15,10 +15,11 @@
 #include <iostream>
 #include <deque>
 
-void *webserver::worker_thread (void* arg)
+void webserver::worker_thread (concurrency::thread* t)
 {
-	worker_pool<net::clientsocket*>* pool = (worker_pool<net::clientsocket*>*)arg;
-	
+	//worker_pool<net::clientsocket*>* pool = (worker_pool<net::clientsocket*>*)arg;
+	worker_pool<net::clientsocket*>* pool = static_cast<worker_pool<net::clientsocket*>*> (t->get_args());
+
 	while (true)
 	{
 		net::clientsocket* client = pool->get_job();
@@ -91,8 +92,6 @@ void *webserver::worker_thread (void* arg)
 		delete response;
 		delete client;
 	}
-	
-	return 0;
 }
 
 void webserver::handle_request (http::request* request, http::response* response)

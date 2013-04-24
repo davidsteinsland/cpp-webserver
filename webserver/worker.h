@@ -7,11 +7,12 @@
 
 #include "http/response.h"
 #include "http/request.h"
+#include "concurrency/thread.h"
 #include <string>
 
 namespace webserver
 {
-	void* worker_thread(void*);
+	void worker_thread(concurrency::thread*);
 	
 	void handle_request(http::request*,http::response*);
 	bool load_module (http::request*,http::response*, std::string);

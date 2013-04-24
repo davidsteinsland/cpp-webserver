@@ -8,6 +8,8 @@
 	#include <pthread.h>
 #endif
 
+#include "concurrency/thread.h"
+#include <vector>
 #include <deque>
 
 namespace webserver
@@ -18,19 +20,17 @@ namespace webserver
 		private:
 			int workers_number;
 			int active_workers; /* inactive_workers=workers_number-active_workers */
-			pthread_t* workers;
 			
 			pthread_cond_t condition;
 			pthread_mutex_t mutex;
 			std::deque<T> job_queue;
 			
+			std::vector<concurrency::thread*> workers;	
 			void* handler;
 			
 		public:
 			worker_pool(int k) : workers_number(k)
 			{
-				workers = new pthread_t[k];
-				
 				pthread_cond_init(&condition, 0);
 				pthread_mutex_init(&mutex, 0);
 			}
@@ -43,14 +43,19 @@ namespace webserver
 					job_queue.pop_front();
 				}
 				
-				delete [] workers;
+				for(int i = 0; i < workers_number; i++)
+				{
+					delete workers[i];
+				}
 			}
 			
-			bool start_workers(void *(*handle) (void *))
+			bool start_workers(void (*handle) (concurrency::thread *))
 			{
 				for (int i = 0; i < workers_number; i++)
 				{
-					pthread_create (&workers[i], NULL, handle, this);
+					concurrency::thread* t = new concurrency::thread(handle, this);
+					workers.push_back(t);
+					t->start();
 				}
 				
 				return true;
