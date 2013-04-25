@@ -1,16 +1,19 @@
 #ifndef WORKER_POOL_H
 #define WORKER_POOL_H
 
-#ifdef _WIN32
+/*#ifdef _WIN32
 	#include <windows.h>
 	#include "webserver/winthread.h"
 #else
 	#include <pthread.h>
-#endif
+#endif*/
 
 #include "concurrency/thread.h"
+#include "concurrency/mutex.h"
+#include "concurrency/condition_variable.h"
 #include <vector>
 #include <deque>
+#include <iostream>
 
 namespace webserver
 {
@@ -21,8 +24,8 @@ namespace webserver
 			int workers_number;
 			int active_workers; /* inactive_workers=workers_number-active_workers */
 			
-			pthread_cond_t condition;
-			pthread_mutex_t mutex;
+			concurrency::condition_variable cond;
+			concurrency::mutex mutx;
 			std::deque<T> job_queue;
 			
 			std::vector<concurrency::thread*> workers;	
@@ -31,8 +34,7 @@ namespace webserver
 		public:
 			worker_pool(int k) : workers_number(k)
 			{
-				pthread_cond_init(&condition, 0);
-				pthread_mutex_init(&mutex, 0);
+				
 			}
 			
 			~worker_pool()
@@ -63,24 +65,23 @@ namespace webserver
 			
 			void add_job (T job)
 			{
-				pthread_mutex_lock(&mutex);
-				
+				concurrency::scoped_lock l(mutx);
 				job_queue.push_back (job);
 				
-				pthread_cond_signal(&condition);
-				pthread_mutex_unlock(&mutex);
+				cond.notify_one();
 			}
 			
 			T get_job ()
 			{
-				pthread_mutex_lock(&mutex);
+				concurrency::scoped_lock l(mutx);
 				while (job_queue.size() == 0)
-					pthread_cond_wait(&condition, &mutex);
+				{
+					cond.wait (mutx);
+				}
 			
 				T job = job_queue.front();
 				job_queue.pop_front();
 				// unlock mutex so other worker threads may access the queue
-				pthread_mutex_unlock(&mutex);
 				
 				return job;
 			}

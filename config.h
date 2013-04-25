@@ -15,7 +15,7 @@ namespace config
 	const std::string ERRORS_ROOT = "./errors";
 	
 	const int PORT = 80;
-	const size_t NUM_WORKER_THREADS = 5;
+	const size_t NUM_WORKER_THREADS = 10;
 	
 	#ifdef _WIN32
 		const std::string MODULE_EXT = ".dll";
