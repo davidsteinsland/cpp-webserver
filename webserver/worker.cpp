@@ -20,7 +20,7 @@ void webserver::worker_thread (concurrency::thread* t)
 	//worker_pool<net::clientsocket*>* pool = (worker_pool<net::clientsocket*>*)arg;
 	worker_pool<net::clientsocket*>* pool = static_cast<worker_pool<net::clientsocket*>*> (t->get_args());
 
-	while (true)
+	while (pool->active())
 	{
 		net::clientsocket* client = pool->get_job();
 		

@@ -24,12 +24,14 @@ webserver::webserver::webserver(int p)
 webserver::webserver::~webserver()
 {
 	listenSocket->close();
-	delete listenSocket;
+	
 	delete thread_pool;
+	delete listenSocket;
 }
 
 void webserver::webserver::shutdown()
 {
+	thread_pool->shutdown();
 	started = false;
 }
 

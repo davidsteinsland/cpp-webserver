@@ -1,12 +1,10 @@
 #ifndef WORKER_POOL_H
 #define WORKER_POOL_H
 
-/*#ifdef _WIN32
+#ifdef _WIN32
 	#include <windows.h>
-	#include "webserver/winthread.h"
-#else
-	#include <pthread.h>
-#endif*/
+	#define sleep(x) Sleep(1000*x)
+#endif
 
 #include "concurrency/thread.h"
 #include "concurrency/mutex.h"
@@ -21,6 +19,7 @@ namespace webserver
 	class worker_pool
 	{
 		private:
+			bool is_active;
 			int workers_number;
 			int active_workers; /* inactive_workers=workers_number-active_workers */
 			
@@ -34,7 +33,7 @@ namespace webserver
 		public:
 			worker_pool(int k) : workers_number(k)
 			{
-				
+				is_active = true;
 			}
 			
 			~worker_pool()
@@ -49,6 +48,24 @@ namespace webserver
 				{
 					delete workers[i];
 				}
+			}
+			
+			void shutdown()
+			{
+				is_active = false;
+				
+				for (std::vector<concurrency::thread*>::iterator it = workers.begin(); it != workers.end(); it++)
+				{
+					concurrency::thread* t = *it;
+					
+					while (t->active())
+						sleep(1);
+				}
+			}
+			
+			bool active()
+			{
+				return is_active;
 			}
 			
 			bool start_workers(void (*handle) (concurrency::thread *))
