@@ -1,16 +1,6 @@
 #include "config.h"
 #include "webserver/webserver.h"
 
-#ifdef _WIN32
-	#include <string.h> /* _strerror() */
-	#include <malloc.h> /* _alloca() */
-	//#define strerror(x)  _ultoa(x, (char *) _alloca(sizeof(x) *3 ), 10)
-	#define WINCDECL __cdecl
-#else
-	#define WINCDECL
-	#include <cstring> /* strerror() */
-#endif
-
 #include <iostream>
 #include <csignal>
 

@@ -33,6 +33,7 @@ void webserver::worker_thread (concurrency::thread* t)
 			delete [] buf;
 			
 			std::cerr << "Recieve failed with code #" << ERRNO << std::endl;
+			std::cerr << strerror (ERRNO) << std::endl;
 			
 			continue;
 		}

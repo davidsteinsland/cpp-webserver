@@ -5,6 +5,16 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#ifdef _WIN32
+	#include <string.h> /* _strerror() */
+	#include <malloc.h> /* _alloca() */
+	//#define strerror(x)  _ultoa(x, (char *) _alloca(sizeof(x) *3 ), 10)
+	#define WINCDECL __cdecl
+#else
+	#define WINCDECL
+	#include <cstring> /* strerror() */
+#endif
+
 #include <string>
 #include <vector>
 
