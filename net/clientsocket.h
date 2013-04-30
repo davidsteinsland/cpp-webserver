@@ -14,30 +14,25 @@
 #endif
 
 #include "net/socket_types.h"
+#include "net/socket.h"
 #include "http/response.h"
 
 #include <string>
 
-#define DEFAULT_BUFFER_SIZE 512
-
 namespace net
 {
-	class clientsocket
+	class clientsocket : public socket
 	{
-		private:
-			SOCKET socket;
-			struct sockaddr_in address;
-			
 		public:
-			clientsocket(SOCKET s,struct sockaddr_in addr) : socket(s), address(addr)
+			clientsocket(SOCKET s,struct sockaddr_in addr)
 			{
-			
+				socket = s;
+				address = addr;
+				is_active = true;
 			}
 			
 			~clientsocket();
 			
-			void close();
-			bool valid();
 			int recieve(char*,int);
 			int send(http::response*);
 			int send (std::string);

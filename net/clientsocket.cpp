@@ -14,23 +14,6 @@ net::clientsocket::~clientsocket()
 	close();
 }
 
-void net::clientsocket::close()
-{
-	if (socket != INVALID_SOCKET)
-	{
-		#ifdef _WIN32
-		closesocket(socket);
-		#else
-		::close(socket);
-		#endif
-	}
-}
-
-bool net::clientsocket::valid()
-{
-	return socket != INVALID_SOCKET;
-}
-
 int net::clientsocket::recieve(char* buf, int len)
 {
 	return ::recv(socket, buf, len, 0);
@@ -38,12 +21,6 @@ int net::clientsocket::recieve(char* buf, int len)
 
 int net::clientsocket::send(http::response* res)
 {
-	#ifdef _WIN32
-		// WSAEVENT e = WSACreateEvent();
-		// WSAEventSelect (socket, e, FD_READ);
-		shutdown (socket, SD_RECEIVE);
-	#endif
-	
 	std::string headersString = res->status_line();
 	std::map<std::string,std::string> headers = res->headers();
 	
@@ -61,6 +38,12 @@ int net::clientsocket::send (std::string data)
 
 int net::clientsocket::send(const char* buf,int len,int flags)
 {
+	#ifdef _WIN32
+		// WSAEVENT e = WSACreateEvent();
+		// WSAEventSelect (socket, e, FD_READ);
+		shutdown (socket, SD_RECEIVE);
+	#endif
+	
 	return ::send (socket, buf, len, flags);
 }
 

@@ -1,7 +1,7 @@
-#ifndef SOCKET_CPP
-#define SOCKET_CPP 
+#ifndef SERVER_SOCKET_CPP
+#define SERVER_SOCKET_CPP 
 
-#include "net/socket.h"
+#include "net/serversocket.h"
 #include "net/socket_types.h"
 #include "net/clientsocket.h"
 
@@ -9,31 +9,14 @@
 
 #define BACKLOG 20
 
-net::socket::~socket()
+net::serversocket::~serversocket()
 {
 	close();
 }
 
-void net::socket::close ()
+int net::serversocket::listen(int port)
 {
-	listening = false;
-	
-	#ifdef _WIN32
-	closesocket(socket);
-    WSACleanup();
-	#else
-	::close(socket);
-	#endif
-}
-
-bool net::socket::active()
-{
-	return listening;
-}
-
-int net::socket::listen(int port)
-{
-	if (listening)
+	if (is_active)
 		return -1;
 
 	#ifdef _WIN32
@@ -88,12 +71,12 @@ int net::socket::listen(int port)
 		return ERRNO;
 	}
 	
-	listening = true;
+	is_active = true;
 
 	return 0;
 }
 
-net::clientsocket* net::socket::accept()
+net::clientsocket* net::serversocket::accept()
 {
 	struct sockaddr_in from;
 	socklen_t l = sizeof (from);

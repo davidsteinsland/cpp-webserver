@@ -1,33 +1,46 @@
 /**
- * socket.h
+ * an interface for both listen socket and client socket
  */
+
 #ifndef SOCKET_H
 #define SOCKET_H
 
-#ifdef _WIN32
-	#include <winsock2.h>
-#else
-	#include <sys/socket.h>
-	#include <sys/types.h>
-#endif
-
 #include "net/socket_types.h"
-#include "net/clientsocket.h"
 
 namespace net
 {
 	class socket
 	{
-		private:
-			bool listening;
+		protected:
 			SOCKET socket;
 			struct sockaddr_in address;
+			bool is_active;
+		
 		public:
-			~socket();
-			void close();
-			bool active();
-			int listen(int);
-			clientsocket* accept();
+			void close()
+			{
+				is_active = false;
+				
+				if (socket != INVALID_SOCKET)
+				{
+					closesocket(socket);
+				}
+			}
+			
+			bool active()
+			{
+				return is_active;
+			}
+			
+			bool valid()
+			{
+				return socket != INVALID_SOCKET;
+			}
+			
+			SOCKET get_socket()
+			{
+				return socket;
+			}
 	};
 };
 

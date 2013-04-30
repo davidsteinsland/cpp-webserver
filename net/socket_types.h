@@ -17,6 +17,8 @@
 	#define INVALID_SOCKET (-1)
 	#define SOCKET_ERROR (-1)
 	
+	#define closesocket(x) close(x)
+	
 	typedef int SOCKET;
 #endif
 
