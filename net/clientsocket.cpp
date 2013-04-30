@@ -38,6 +38,12 @@ int net::clientsocket::recieve(char* buf, int len)
 
 int net::clientsocket::send(http::response* res)
 {
+	#ifdef _WIN32
+		// WSAEVENT e = WSACreateEvent();
+		// WSAEventSelect (socket, e, FD_READ);
+		shutdown (socket, SD_RECEIVE);
+	#endif
+	
 	std::string headersString = res->status_line();
 	std::map<std::string,std::string> headers = res->headers();
 	
