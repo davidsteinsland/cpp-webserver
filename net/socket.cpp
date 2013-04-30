@@ -7,6 +7,8 @@
 
 #include <cstring> /* memset */
 
+#define BACKLOG 20
+
 net::socket::~socket()
 {
 	close();
@@ -80,7 +82,7 @@ int net::socket::listen(int port)
 		return ERRNO;
 	}
 
-	if (::listen (socket, 5) != 0)
+	if (::listen (socket, BACKLOG) != 0)
 	{
 		close();
 		return ERRNO;
@@ -99,7 +101,7 @@ net::clientsocket* net::socket::accept()
 	
 	clientsocket* clientSocket = new clientsocket(clientfd, from);
 	
-	if (clientfd == INVALID_SOCKET)
+	if (clientfd == INVALID_SOCKET )
 	{
 		delete clientSocket;
 		return NULL;
