@@ -4,7 +4,7 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H 
 
-#include "net/socket.h"
+#include "net/serversocket.h"
 #include "net/clientsocket.h"
 #include "webserver/worker_pool.h"
  
@@ -14,7 +14,7 @@ namespace webserver
 	{
 		private:
 			worker_pool<net::clientsocket*>* thread_pool;
-			net::socket* listenSocket;
+			net::serversocket* listenSocket;
 			int port;
 			bool started;
 			

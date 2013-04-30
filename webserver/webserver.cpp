@@ -5,7 +5,7 @@
 #include "config.h"
 #include "webserver/webserver.h"
 #include "webserver/worker.h"
-#include "net/socket.h"
+#include "net/serversocket.h"
 #include "net/clientsocket.h"
 
 #include <string>
@@ -16,7 +16,7 @@
 webserver::webserver::webserver(int p)
 {
 	port = p;
-	listenSocket = new net::socket();
+	listenSocket = new net::serversocket();
 	
 	thread_pool = new worker_pool<net::clientsocket*> (config::NUM_WORKER_THREADS);
 }

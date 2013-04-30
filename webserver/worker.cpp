@@ -31,98 +31,16 @@ void webserver::worker_thread (concurrency::thread* t)
 		 */
 		// /*
 		std::string request_content;
+		int bytes_read = client->read_fully (request_content);
 		
-		int buflen = 128;
-		char buf[buflen];
-		int bytesRead = 0;
-		int recvResult = 0;
-		bool error = false;
-		
-		do
+		if (bytes_read == -1)
 		{
-			recvResult = client->recieve(buf, buflen);
-			if ( recvResult > 0 )
-			{
-				bytesRead += recvResult;
-				
-				request_content.append (std::string(buf, 0, bytesRead));
-				
-				/*
-				 * 1. Check for CRLF + CRLF
-				 *   1.1 If found, check request_content for any Content-Length header
-				 *   1.1.1 If found, read additional X bytes
-				 *  1.2 If not found, end request
-				 * 2. Continue with reading
-				 */
-				unsigned headers_end_pos = request_content.find("\r\n\r\n");
-				if ( headers_end_pos == std::string::npos )
-					continue;
-				
-				unsigned content_length_pos = request_content.find ("Content-Length:");
-				if ( content_length_pos == std::string::npos)
-					break;
-				/*
-					makes sure we haven't read the content body yet.
-					we know how large the content-body is, by content-length.
-						content_body_s = int(content-length);
-					we can also find the size of the headers:
-						headers_s = request_content.substr(0, pos(\r\n\r\n)).length();
-					we then have the following equation:
-						request_s = content_body_s + headers_s
-					we know also how many bytes we have read already (bytesRead):
-						remaining_s = request_s - bytesRead
-									= content_body_s + headers_s - bytesRead
-				*/
-				std::string headers = request_content.substr(0, headers_end_pos);
-				
-				std::istringstream fstr (request_content.substr (content_length_pos));
-				std::string content_length_header;
-				std::getline ( fstr, content_length_header );
-				
-				int headers_length = headers.length();
-				int content_length = atoi(content_length_header.substr (16).c_str());
-				
-				int remainingBytes = headers_length + content_length - bytesRead;
-				if (remainingBytes <= 0)
-					break;
-			}
-			else if ( recvResult == 0 )
-			{
-				// std::cout << "Connection closed\n" << std::endl;
-			}
-			else
-			{
-				std::cerr << "Recv failed: " << ERRNO << std::endl;
-				std::cerr << strerror (ERRNO) << std::endl;
-				error = true;
-			}
-		} while( recvResult > 0 );
-		
-		if (error)
-		{
-			delete client;
-			continue;
-		}
-		
-		// */
-		
-		/*
-		char* buf = new char[512];
-		int k = client->recieve(buf, 512);
-		
-		if ( k <= 0 )
-		{
-			delete client;
-			delete [] buf;
-			
-			std::cerr << "Recieve failed with code #" << ERRNO << std::endl;
+			std::cerr << "Recv failed: " << ERRNO << std::endl;
 			std::cerr << strerror (ERRNO) << std::endl;
 			
+			delete client;
 			continue;
 		}
-		
-		std::string request_content = std::string(buf, 0, k);
-		*/
 		
 		http::request* request = http::request::parse(request_content);
 		http::response* response = new http::response (200, "text/plain");
@@ -174,7 +92,6 @@ void webserver::worker_thread (concurrency::thread* t)
 		client->send(response);
 		client->close();
 		
-		// delete [] buf;
 		delete request;
 		delete response;
 		delete client;

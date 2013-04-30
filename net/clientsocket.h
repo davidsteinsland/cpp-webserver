@@ -33,6 +33,7 @@ namespace net
 			
 			~clientsocket();
 			
+			int read_fully (std::string&);
 			int recieve(char*,int);
 			int send(http::response*);
 			int send (std::string);
