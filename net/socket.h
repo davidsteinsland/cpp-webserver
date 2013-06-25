@@ -23,7 +23,7 @@ namespace net
 				
 				if (socket != INVALID_SOCKET)
 				{
-					closesocket(socket);
+					::closesocket(socket);
 				}
 			}
 			

@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string>
 #include <map>
+#include <cstdlib>
 
 #define DEFAULT_BUFFER_LENGTH 128
 

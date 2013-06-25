@@ -6,6 +6,7 @@
 #include "net/clientsocket.h"
 
 #include <cstring> /* memset */
+#include <cstdlib>
 
 #define BACKLOG 20
 
